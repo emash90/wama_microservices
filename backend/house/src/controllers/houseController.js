@@ -23,6 +23,15 @@ const getHouseById = async (req, res, next) => {
 
 const createHouse = async (req, res, next) => {
   try {
+    //check if house exists
+    const {house_number} = req.body
+    const houseExist = await houseService.findHouseByNumber(house_number)
+    if (houseExist) {
+        return res.status(409).json({ 
+          message: "House with this number already exists",
+          data: houseExist
+         });
+      }
     const newHouse = await houseService.createHouse(req.body);
     res.status(201).json(newHouse);
   } catch (error) {

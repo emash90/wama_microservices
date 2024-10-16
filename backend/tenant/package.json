@@ -1,0 +1,16 @@
+{
+  "name": "tenant",
+  "version": "1.0.0",
+  "description": "tenant service",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "edwin",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "mongoose": "^8.7.1"
+  }
+}

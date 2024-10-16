@@ -7,6 +7,9 @@ const getAllHouses = async () => {
 const getHouseById = async (id) => {
   return await House.findById(id);
 };
+const findHouseByNumber = async(house_number) => {
+  return await House.findOne({house_number});
+}
 
 const createHouse = async (houseData) => {
   const newHouse = new House(houseData);
@@ -17,4 +20,5 @@ module.exports = {
   getAllHouses,
   getHouseById,
   createHouse,
+  findHouseByNumber
 };
