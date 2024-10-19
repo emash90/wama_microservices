@@ -1,19 +1,19 @@
 const mongoose = require('mongoose');
 
 const tenantSchema = new mongoose.Schema({
-    tenantName: {
+    tenant_name: {
         type: String,
         required: true
     },
-    tenantPhone: {
+    tenant_phone: {
         type: String,
         required: true
     },
-    tenantHouse: {
+    tenant_house: {
         type: mongoose.Schema.Types.ObjectId,
         required: true
     },
-    tenantRent: {
+    tenant_rent: {
         type: Number,
         required: true
     }
