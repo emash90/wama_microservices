@@ -1,8 +1,23 @@
 const express = require("express")
 const app = express()
 
-const {PORT} = require('./config/index')
+const userRoutes = require('./src/routes/userRoutes')
+
+const {PORT, connectDB} = require('./config/index')
 
 
-app.listen(PORT, () => 
-console.log(`app listing on port ${PORT}`))
+// Middleware to parse JSON
+app.use(express.json());
+app.use(express.urlencoded({ extended: true })); 
+
+
+//user routes
+app.use(userRoutes);
+
+//connect database
+
+connectDB();
+
+app.listen(PORT, () => {
+console.log(`user service listing on port ${PORT}`)
+})
