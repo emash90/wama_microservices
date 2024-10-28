@@ -18,7 +18,7 @@ const SideNav = () => {
           <SidebarMenu.Nav>
             <SidebarMenu.Nav.Link
               as={NavLink}
-              to="/houses"
+              to="/house"
               style={{ display: 'flex', alignItems: 'center', padding: '10px', color: 'white', textDecoration: 'none' }}
               activeStyle={{ backgroundColor: '#1976d2' }}
             >
@@ -28,7 +28,7 @@ const SideNav = () => {
             
             <SidebarMenu.Nav.Link
               as={NavLink}
-              to="/tenants"
+              to="/tenant"
               style={{ display: 'flex', alignItems: 'center', padding: '10px', color: 'white', textDecoration: 'none' }}
               activeStyle={{ backgroundColor: '#1976d2' }}
             >
@@ -38,7 +38,7 @@ const SideNav = () => {
 
             <SidebarMenu.Nav.Link
               as={NavLink}
-              to="/payments"
+              to="/payment"
               style={{ display: 'flex', alignItems: 'center', padding: '10px', color: 'white', textDecoration: 'none' }}
               activeStyle={{ backgroundColor: '#1976d2' }}
             >

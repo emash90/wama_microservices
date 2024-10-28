@@ -1,11 +1,15 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors')
 require('dotenv').config();
 const connectDB = require('./config/database'); 
 
 const houseRoutes = require('./src/routes/houseRoutes');
 
 const app = express();
+
+//use cors
+app.use(cors())
 
 // Middleware to parse JSON
 app.use(express.json());
