@@ -8,6 +8,7 @@ import {
   CDBSidebarFooter,
   CDBIcon,
   CDBLink,
+  CDBCollapse,
 } from 'cdbreact';
 
 const SideNav = ({ onToggle }) => {
