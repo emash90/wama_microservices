@@ -12,9 +12,10 @@ import {
   Paper 
 } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { useNavigate } from 'react-router-dom';
 
-const HouseList = ({ houses }) => {
-
+const HouseList = ({ houses, viewHouse }) => {
+    const navigate = useNavigate()
     const [anchorEl, setAnchorEl] = useState(null)
     const [selectedHouse, setSelectedHouse] = useState(null);
   
@@ -30,7 +31,8 @@ const HouseList = ({ houses }) => {
 
     const handleView = () => {
         //TODO: handle view more details on selected house
-        console.log("handleView clicked", 'house is', selectedHouse )
+        // viewHouse(selectedHouse._id)
+        navigate(`/house/${selectedHouse._id}`)
         handleMenuClose();
     }
     const handleEdit = () => {

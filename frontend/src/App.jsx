@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Layout from './components/Layout';
+import  HouseDetails  from './components/House/HouseDetails'
 import { LoginPage, RegisterPage, HousePage, TenantPage, PaymentPage } from './pages/index'
 
 function App() {
@@ -9,6 +10,7 @@ function App() {
       <Layout>
         <Routes>
           <Route path="/house" element={<HousePage />} />
+          <Route path="/house/:id" element={<HouseDetails />} />
           <Route path="/tenant" element={<TenantPage />} />
           <Route path="/payment" element={<PaymentPage />} />
           <Route path="/logout"/>

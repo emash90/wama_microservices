@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import HouseList from '../components/House/HouseList'
-import { fetchHouses } from '../services/houseService';
+import { fetchHouses,fetchHouseById } from '../services/houseService';
 
 const HousePage = () => {
     const [houses, setHouses] = useState()
@@ -12,9 +12,14 @@ const HousePage = () => {
         };
         loadHouses();
       }, []);
+    //define function to get house by Id
+    const viewHouse = async(houseId) => {
+        const response = await fetchHouseById(houseId);
+        console.log("response", response)
+    }
   return (
     <div>
-      <HouseList houses={houses} />
+      <HouseList houses={houses} viewHouse={viewHouse} />
     </div>
   )
 }
