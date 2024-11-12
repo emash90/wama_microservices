@@ -16,9 +16,14 @@ const createHouse = async (houseData) => {
   return await newHouse.save();
 };
 
+const updateHouse = async (id, houseData) => {
+  return await House.findByIdAndUpdate(id, houseData, { new: true });
+}
+
 module.exports = {
   getAllHouses,
   getHouseById,
   createHouse,
-  findHouseByNumber
+  findHouseByNumber,
+  updateHouse
 };

@@ -19,7 +19,7 @@ const HousePage = () => {
     }
   return (
     <div>
-      <HouseList houses={houses} viewHouse={viewHouse} />
+      <HouseList houses={houses} viewHouse={viewHouse} setHouses={setHouses} />
     </div>
   )
 }

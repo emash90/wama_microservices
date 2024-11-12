@@ -3,13 +3,26 @@ import { useNavigate } from 'react-router-dom';
 import { CDBContainer, CDBRow, CDBCol, CDBCard, CDBCardBody, CDBDataTable, CDBBtn } from 'cdbreact';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { Menu, MenuItem } from '@mui/material';
+import AddHouseModal from './AddHouseModal';
+import EditHouseModal from './EditHouseModal';
 
 
-const HouseList = ({ houses, viewHouse }) => {
+const HouseList = ({ houses, viewHouse, setHouses }) => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedHouse, setSelectedHouse] = useState(null);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+
+
+
+  const handleShowAddModal = () => setShowAddModal(true);
+  const handleCloseAddModal = () => setShowAddModal(false);
+  const handleCloseEditModal = () => {
+    setShowEditModal(false);
+    setSelectedHouse(null);
+  }
 
   useEffect(() => {
     if (houses) {
@@ -24,7 +37,6 @@ const HouseList = ({ houses, viewHouse }) => {
 
   const handleMenuClose = () => {
     setAnchorEl(null);
-    setSelectedHouse(null);
   };
 
   const handleView = () => {
@@ -33,12 +45,12 @@ const HouseList = ({ houses, viewHouse }) => {
   };
 
   const handleEdit = () => {
-    console.log("handleEdit clicked for house", selectedHouse);
-    handleMenuClose();
+    setShowEditModal(true);  
+    handleMenuClose(); 
   };
 
   const handleDelete = () => {
-    console.log("delete house", selectedHouse);
+    // TODO: Implement delete house
     handleMenuClose();
   };
 
@@ -76,13 +88,14 @@ const HouseList = ({ houses, viewHouse }) => {
   }
 
   return (
+    <>
     <CDBContainer>
       <CDBRow className="mb-4">
         <CDBCol>
           <h2>Houses List</h2>
         </CDBCol>
         <CDBCol className="text-end" style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <CDBBtn color="primary" onClick={() => navigate('/house/add')}>
+          <CDBBtn color="primary" onClick={() => handleShowAddModal()}>
             Add House
           </CDBBtn>
         </CDBCol>
@@ -115,6 +128,9 @@ const HouseList = ({ houses, viewHouse }) => {
         <MenuItem onClick={handleDelete}>Delete</MenuItem>
       </Menu>
     </CDBContainer>
+    <AddHouseModal show={showAddModal} onClose={handleCloseAddModal} setHouses={setHouses} />
+    <EditHouseModal show={showEditModal} onClose={handleCloseEditModal} house={selectedHouse} setHouses={setHouses} />
+    </>
   );
 };
 

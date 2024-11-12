@@ -39,8 +39,18 @@ const createHouse = async (req, res, next) => {
   }
 };
 
+const updateHouse = async (req, res, next) => {
+  try {
+    const house = await houseService.updateHouse(req.params.id, req.body);
+    res.status(200).json(house);
+  } catch (error) {
+    next(error);
+  }
+}
+
 module.exports = {
   getAllHouses,
   getHouseById,
   createHouse,
+  updateHouse
 };

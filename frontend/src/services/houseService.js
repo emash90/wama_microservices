@@ -42,4 +42,15 @@ const fetchHouseById = async (houseId) => {
     }
 }
 
-export { fetchHouses, addHouse, fetchHouseById };
+//update house
+
+const updateHouse = async (houseId, house) => {
+    try {
+        const response = await axios.put(`${HOUSE_API_URL}/${houseId}`, house);
+        return response.data;
+    } catch (error) {
+        console.error(`Error updating house with ID ${houseId}:`, error);
+    }
+}
+
+export { fetchHouses, addHouse, fetchHouseById, updateHouse }
