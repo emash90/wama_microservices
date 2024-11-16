@@ -1,7 +1,11 @@
 const mongoose = require('mongoose');
 
 const tenantSchema = new mongoose.Schema({
-    tenant_name: {
+    tenant_first_name: {
+        type: String,
+        required: true
+    },
+    tenant_last_name: {
         type: String,
         required: true
     },
@@ -9,9 +13,14 @@ const tenantSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    tenant_house: {
+    tenant_house_id: {
         type: mongoose.Schema.Types.ObjectId,
         required: true
+    },
+    tenant_email: {
+        type: String,
+        required: false,
+        default: ''
     },
     tenant_rent: {
         type: Number,
