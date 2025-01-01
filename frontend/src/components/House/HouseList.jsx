@@ -103,7 +103,7 @@ const HouseList = ({ houses, viewHouse, setHouses }) => {
       <CDBRow>
         <CDBCol>
           <CDBCard>
-            <CDBCardBody>
+            <CDBCardBody style={{ maxHeight: '380px', overflowY: 'auto' }} >
               <CDBDataTable
                 striped
                 bordered

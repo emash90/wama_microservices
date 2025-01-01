@@ -15,6 +15,7 @@ const login = async (req, res, next) => {
 
         // Find user by email
         const user = await userService.findOne(email);
+        console.log("server log", user,)
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
@@ -27,7 +28,6 @@ const login = async (req, res, next) => {
 
         // Exclude password from the response
         const { password: _, ...userData } = user._doc;
-
         // Respond with user data
         res.status(200).json(userData);
     } catch (error) {

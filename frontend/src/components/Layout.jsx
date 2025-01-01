@@ -3,6 +3,7 @@ import SideNav from './SideNav';
 import { Container, Row, Col } from 'react-bootstrap';
 import Logo from '../assets/wama-logo.ico'
 import { FaUser } from "react-icons/fa";
+import UserDropdown from './UserDropdown'
 
 const Layout = ({ children }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -31,10 +32,7 @@ console.log(isCollapsed)
                 </div>
                 
                 {/* User Info - Pushed to the Right */}
-                <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-                <FaUser style={{ height: '30px', width: '30px', borderRadius: '50%', marginRight: '5px' }} />
-                <span>John Doe</span>
-                </div>
+                <UserDropdown /> 
             </div>
             </header>
 
@@ -45,8 +43,8 @@ console.log(isCollapsed)
           </div>
 
           {/* Footer */}
-          <footer style={{ padding: '1rem', background: '#f1f1f1', textAlign: 'center', position: 'fixed', width: '100%', bottom: 0 }}>
-            <p>Dashboard Footer</p>
+          <footer style={{ padding: '.25rem', background: '#f1f1f1', textAlign: 'center', position: 'fixed', width: '100%', bottom: 0 }}>
+            <p>Footer</p>
           </footer>
         </Col>
       </Row>
