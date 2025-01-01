@@ -1,10 +1,14 @@
 const express = require("express")
 const app = express()
 
+
+
 const userRoutes = require('./src/routes/userRoutes')
 
 const {PORT, connectDB} = require('./config/index')
 
+const cors = require('cors')
+app.use(cors())
 
 // Middleware to parse JSON
 app.use(express.json());

@@ -2,8 +2,8 @@ const tenantService = require('../services/tenantServices');
 
 const getAllTenants = async (req, res, next) => {
   try {
-    const houses = await tenantService.getAllTenants();
-    res.status(200).json(houses);
+    const tenants = await tenantService.getAllTenants();
+    res.status(200).json(tenants);
   } catch (error) {
     next(error);
   }

@@ -30,7 +30,7 @@ module.exports = (app) => {
 
    // Route for user service
    app.use('/user', createProxyMiddleware({
-    target: process.env.PAYMENT_SERVICE_URL || 'http://localhost:4004',
+    target: process.env.USER_SERVICE_URL || 'http://localhost:4004',
     changeOrigin: true,
     pathRewrite: {
       '^/user': '', 

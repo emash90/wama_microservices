@@ -1,4 +1,5 @@
 const express = require('express')
+const cors = require('cors')
 require('dotenv').config()
 const connectDB = require('./config/database')
 const tenantRoutes = require('./src/routes/tenantRoutes');
@@ -10,6 +11,7 @@ const app = express()
 // Middleware to parse JSON
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); 
+app.use(cors())
 
 //connect to mongoDB
 
