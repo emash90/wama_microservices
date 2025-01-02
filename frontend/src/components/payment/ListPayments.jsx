@@ -20,18 +20,22 @@ const PaymentList = ({ payments, setPayments }) => {
   const tableData = {
     columns: [
       { label: '#', field: 'index', sort: 'asc' },
-      { label: 'Tenant Name', field: 'tenant_name', sort: 'asc' },
-      { label: 'House', field: 'house_name', sort: 'asc' },
+      { label: 'Tenant First Name', field: 'tenant_first_name', sort: 'asc' },
+      { label: 'Tenant Last Name', field: 'tenant_last_name', sort: 'asc' },
+      { label: 'House', field: 'house_number', sort: 'asc' },
       { label: 'Amount Paid', field: 'amount_paid', sort: 'asc' },
       { label: 'Date', field: 'date_paid', sort: 'asc' },
+      { label: 'Payment For', field: 'payment_for', sort: 'asc' },
       { label: 'Status', field: 'status', sort: 'asc' },
     ],
     rows: payments?.map((payment, index) => ({
       index: index + 1,
-      tenant_name: payment.tenant_name || 'Unknown Tenant',
-      house_name: payment.house_name || 'Unknown House',
+      tenant_first_name: payment.tenantDetails.tenant_first_name || 'Unknown Tenant',
+      tenant_last_name: payment.tenantDetails.tenant_last_name || 'Unknown Tenant',
+      house_number: payment.houseDetails.house_number || 'Unknown House',
       amount_paid: payment.amount_paid || 0,
       date_paid: new Date(payment.date_paid).toLocaleDateString(),
+      payment_for: payment.month,
       status: payment.status || 'Pending',
     })),
   };
