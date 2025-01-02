@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { FaUser, FaAngleDown, FaSignOutAlt } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 const UserDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate()
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -12,6 +14,7 @@ const UserDropdown = () => {
     //TODO: add profile view functionalities
   }
   const handleLogout = () => {
+    navigate('/login')
     //TODO: add logout functionalities
   }
   return (

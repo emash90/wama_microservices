@@ -19,6 +19,14 @@ const fetchHouses = async () => {
       }
     };
 
+
+        //get tenant house details
+
+        const getHouseByTenantId = async (tenantId) => {
+        
+        }
+    
+
 //add house
 
 const addHouse = async (house) => {

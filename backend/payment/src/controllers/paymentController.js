@@ -3,6 +3,7 @@ const paymentService = require('../services/paymentService')
 const findAllPayments = async (req, res, next) => {
     try {
         const payments = await paymentService.getAllPayment()
+        console.log("payments aggregated", payments)
         res.status(200).json(payments)
     } catch (error) {
         next(error)
@@ -11,6 +12,7 @@ const findAllPayments = async (req, res, next) => {
 
 const createPayment = async (req, res, next) => {
     try {
+        console.log("payment", req.body)
         const newPayment = await paymentService.createPayment(req.body);
         res.status(201).json(newPayment);
     } catch (error) {
