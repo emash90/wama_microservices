@@ -11,6 +11,7 @@ const findAllPayments = async (req, res, next) => {
 
 const createPayment = async (req, res, next) => {
     try {
+        console.log("payment", req.body)
         const newPayment = await paymentService.createPayment(req.body);
         res.status(201).json(newPayment);
     } catch (error) {
