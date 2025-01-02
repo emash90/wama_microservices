@@ -9,12 +9,47 @@ import {
   CDBBtn,
 } from 'cdbreact';
 import AddPaymentModal from './AddPaymentModal';
+import { Menu, MenuItem } from '@mui/material';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { useNavigate } from 'react-router-dom';
+
+
+
 
 const PaymentList = ({ payments, setPayments }) => {
   const [showAddModal, setShowAddModal] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [selectedPayment, setSelectedPayment] = useState()
+  const navigate = useNavigate()
+  
 
   const handleShowAddModal = () => setShowAddModal(true);
   const handleCloseAddModal = () => setShowAddModal(false);
+
+  const handleMenuOpen = (event, payment) => {
+    setAnchorEl(event.currentTarget);
+    setSelectedPayment(payment);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleView = () => {
+    navigate(`/payment/${selectedPayment._id}`);
+    handleMenuClose();
+  };
+
+  const handleEdit = () => {
+    console.log("selected payment", selectedPayment)
+    // setShowEditModal(true);  
+    handleMenuClose(); 
+  };
+
+  const handleDelete = () => {
+    // TODO: Implement delete house
+    handleMenuClose();
+  };
 
   // Prepare data for CDBDataTable
   const tableData = {
@@ -27,6 +62,8 @@ const PaymentList = ({ payments, setPayments }) => {
       { label: 'Date', field: 'date_paid', sort: 'asc' },
       { label: 'Payment For', field: 'payment_for', sort: 'asc' },
       { label: 'Status', field: 'status', sort: 'asc' },
+      { label: 'Actions', field: 'actions', width: 150 }
+
     ],
     rows: payments?.map((payment, index) => ({
       index: index + 1,
@@ -37,6 +74,13 @@ const PaymentList = ({ payments, setPayments }) => {
       date_paid: new Date(payment.date_paid).toLocaleDateString(),
       payment_for: payment.month,
       status: payment.status || 'Pending',
+      actions: (
+        <MoreVertIcon
+          aria-controls="simple-menu"
+          aria-haspopup="true"
+          onClick={(e) => handleMenuOpen(e, payment)}
+        />
+      ),
     })),
   };
 
@@ -70,6 +114,17 @@ const PaymentList = ({ payments, setPayments }) => {
             </CDBCard>
           </CDBCol>
         </CDBRow>
+        <Menu
+        id="simple-menu"
+        anchorEl={anchorEl}
+        keepMounted
+        open={Boolean(anchorEl)}
+        onClose={handleMenuClose}
+      >
+        <MenuItem onClick={handleView}>View</MenuItem>
+        <MenuItem onClick={handleEdit}>Edit</MenuItem>
+        <MenuItem onClick={handleDelete}>Delete</MenuItem>
+      </Menu>
       </CDBContainer>
 
       <AddPaymentModal show={showAddModal} onClose={handleCloseAddModal} setPayments={setPayments} />
