@@ -7,4 +7,8 @@ export default defineConfig({
   optimizeDeps: {
     include: ['@mui/material', '@emotion/react', '@emotion/styled', 'cdbreact'],
   },
+  server: {
+    host: '0.0.0.0', // Bind to all network interfaces
+    port: 5173,      // Port for the development server
+  },
 });

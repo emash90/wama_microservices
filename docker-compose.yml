@@ -1,0 +1,94 @@
+version: '3.8'
+
+services:
+  api-gateway:
+    build:
+      context: ./backend/api-gateway
+    volumes:
+      - ./backend/api-gateway:/app
+      - /app/node_modules
+    ports:
+      - "4000:4000"
+    environment:
+      NODE_ENV: development
+    env_file:
+      - .env
+    command: npm run dev
+    depends_on:
+      - payment
+      - user
+      - tenant
+      - house
+
+  payment:
+    build:
+      context: ./backend/payment
+    volumes:
+      - ./backend/payment:/app
+      - /app/node_modules
+    ports:
+      - "4003:4003"
+    environment:
+      NODE_ENV: development
+    env_file:
+      - .env
+    command: npm run dev
+    depends_on:
+      - tenant
+      - house
+
+  user:
+    build:
+      context: ./backend/user
+    volumes:
+      - ./backend/user:/app
+      - /app/node_modules
+    ports:
+      - "4004:4004"
+    environment:
+      NODE_ENV: development
+    env_file:
+      - .env
+    command: npm run dev
+
+  tenant:
+    build:
+      context: ./backend/tenant
+    volumes:
+      - ./backend/tenant:/app
+      - /app/node_modules
+    ports:
+      - "4001:4001"
+    environment:
+      NODE_ENV: development
+    env_file:
+      - .env
+    command: npm run dev
+
+  house:
+    build:
+      context: ./backend/house
+    volumes:
+      - ./backend/house:/app
+      - /app/node_modules
+    ports:
+      - "4002:4002"
+    environment:
+      NODE_ENV: development
+    env_file:
+      - .env
+    command: npm run dev
+
+  frontend:
+    build:
+      context: ./frontend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "5173:5173"
+    depends_on:
+      - api-gateway
+    env_file:
+      - .env
+    command: npm run dev

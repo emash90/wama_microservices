@@ -3,6 +3,7 @@ const houseService = require('../services/houseService');
 const getAllHouses = async (req, res, next) => {
   try {
     const houses = await houseService.getAllHouses();
+    console.log("all houses", houses)
     res.status(200).json(houses);
   } catch (error) {
     next(error);
