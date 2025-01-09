@@ -19,12 +19,41 @@ const LoginPage = () => {
   }
 
   const handleLoginUser = async () => {
-    console.log("login details", user)
-    const response = await loginUser(user)
-    if (response) {
-      navigate('/dashboard')
+    console.log("login details", user);
+    
+    // Validate the user email
+    if (!user.email || user.email === '') {
+      console.log("No user email provided");
+      return; // Prevent further execution if email is missing
     }
-  }
+    
+    try {
+      // Attempt to login
+      const response = await loginUser(user);
+      
+      if (response.status !== 200) {
+        // Handle unsuccessful login
+        console.log("Login failed:", response);
+      } else {
+        // Successful login, store token in localStorage
+        console.log("Login successful, response:", response);
+        
+        // Ensure the response contains a token
+        if (response.data && response.data.token) {
+          localStorage.setItem('authToken', response.data.token);
+          console.log('Token saved to localStorage');
+          
+          // Redirect to dashboard
+          navigate('/dashboard');
+        } else {
+          console.error("No token received in response");
+        }
+      }
+    } catch (error) {
+      // Handle unexpected errors
+      console.error("Error during login:", error);
+    }
+  };  
 
   return (
     <Container className="d-flex align-items-center justify-content-center" style={{ minHeight: '100vh' }}>

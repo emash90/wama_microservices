@@ -12,10 +12,10 @@ const loginUser = async (user) => {
     try {
         const response = await axios.post(`${USER_API_URL}/login`, user)
         console.log("response", response.data)
-        return response.data;
+        return response;
       } catch (error) {
         console.error("Error fetching users:", error);
-        return [];
+        return error
       }
 }
 

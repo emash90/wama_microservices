@@ -15,7 +15,6 @@ const login = async (req, res, next) => {
 
         // Find user by email
         const user = await userService.findOne(email);
-        console.log("server log", user,)
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
@@ -26,10 +25,12 @@ const login = async (req, res, next) => {
             return res.status(401).json({ message: 'Invalid credentials' });
         }
 
+        const token = await userService.generateToken(user);
+
         // Exclude password from the response
         const { password: _, ...userData } = user._doc;
         // Respond with user data
-        res.status(200).json(userData);
+        res.status(200).json({ ...userData, token });
     } catch (error) {
         next(error);
     }
@@ -47,10 +48,12 @@ const createUser = async(req, res, next) => {
         // Save the new user
         const user = await userService.createUser(req.body);
 
+        const token = await userService.generateToken(user);
+
         // Exclude password from the response
         const { password: _, ...userData } = user._doc;
 
-        res.status(201).json(userData);
+        res.status(201).json({...userData, token})
     } catch (error) {
         next(error);
     }
@@ -69,10 +72,9 @@ const getUserById = async (req, res, next) => {
     }
 }
 
-
 module.exports = {
     getAllUsers,
     createUser,
     login,
-    getUserById
+    getUserById,
 }

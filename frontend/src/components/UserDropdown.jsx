@@ -14,6 +14,7 @@ const UserDropdown = () => {
     //TODO: add profile view functionalities
   }
   const handleLogout = () => {
+    localStorage.removeItem('authToken');
     navigate('/login')
     //TODO: add logout functionalities
   }

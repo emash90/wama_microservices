@@ -1,5 +1,6 @@
 const User = require('../models/userModel')
-const bcrypt = require('bcrypt'); 
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken'); 
 const SALT_ROUNDS = 10;
 
 
@@ -31,10 +32,16 @@ const checkPassword = async (inputPassword, savedPassword) => {
     return await bcrypt.compare(inputPassword, savedPassword);
 };
 
+const generateToken = (user) => {
+    const payload = { id: user._id, email: user.email };
+    return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
+};
+
 module.exports = {
     getAllUsers,
     getUserById,
     createUser,
     findOne,
-    checkPassword
+    checkPassword,
+    generateToken
 }
