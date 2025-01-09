@@ -1,9 +1,12 @@
 import React, { useState } from 'react'
 import { Button, Form, Container, Row, Col } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { registerUser } from '../services/authService';
+import { toast } from 'react-toastify';
+
 
 const RegisterPage = () => {
+  const navigate = useNavigate()
   const [newUser, setNewUser] = useState({
     first_name: '',
     last_name: '',
@@ -20,9 +23,24 @@ const RegisterPage = () => {
   }
 
   const handleRegister = async () => {
-    console.log("new user", newUser)
-    const resp = await registerUser(newUser)
-    console.log("new user register", resp)
+    if (!newUser.first_name || !newUser.last_name || !newUser.email || !newUser.password) {
+      toast.error('please fill all fields!')
+      return
+    } 
+    try {
+      const resp = await registerUser(newUser)
+      console.log("new user register", resp)
+      if (resp && resp.status === 201) {
+        toast.success('Registration successful')
+        navigate('/dashboard')
+      }else {
+        const message = resp?.data?.message || "Something went wrong!";
+        console.log("error response", message)
+        toast.error(`Failed: ${message}`)
+      }
+    } catch (error) {
+      toast.error(error)
+    }
   }
 
   return (

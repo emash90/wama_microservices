@@ -6,11 +6,36 @@ const TENANT_API_URL = `${BASE_URL}/tenant`
 
 console.log("TENANT_API_URL", TENANT_API_URL)
 
+// Function to get the token from localStorage
+const getAuthToken = () => {
+    return localStorage.getItem('authToken'); // Retrieves the stored token
+  };
+  
+  // Create an axios instance to add the Authorization header for each request
+  const axiosInstance = axios.create();
+  
+  // Interceptor to add the token to headers of each request
+  axiosInstance.interceptors.request.use(
+    (config) => {
+      const token = getAuthToken();
+      if (token) {
+        config.headers['authorization'] = `Bearer ${token}`;
+      }
+      console.log("config ==>", config)
+  
+      return config;
+    },
+    (error) => {
+      return Promise.reject(error);
+    }
+  );
+  
+
 //get all tenants
 
 const fetchTenants = async () => {
     try {
-        const response = await axios.get(TENANT_API_URL);
+        const response = await axiosInstance.get(TENANT_API_URL);
         console.log("response", response)
         return response.data;
       } catch (error) {
@@ -23,7 +48,7 @@ const fetchTenants = async () => {
 
 const addTenant = async (tenant) => {
     try {
-        const response = await axios.post(TENANT_API_URL, tenant);
+        const response = await axiosInstance.post(TENANT_API_URL, tenant);
         return response.data;
     } catch (error) {
         console.error("Error adding tenant:", error);
@@ -34,7 +59,7 @@ const addTenant = async (tenant) => {
 
 const fetchTenantById = async (tenantId) => {
     try {
-        const response = await axios.get(`${TENANT_API_URL}/${tenantId}`);
+        const response = await axiosInstance.get(`${TENANT_API_URL}/${tenantId}`);
         return response.data;
     } catch (error) {
         console.error(`Error fetching tenant with ID ${tenantId}:`, error);
@@ -46,7 +71,7 @@ const fetchTenantById = async (tenantId) => {
 
 const updateTenant = async (tenantId, tenant) => {
     try {
-        const response = await axios.put(`${TENANT_API_URL}/${tenantId}`, tenant);
+        const response = await axiosInstance.put(`${TENANT_API_URL}/${tenantId}`, tenant);
         return response.data;
     } catch (error) {
         console.error(`Error updating tenant with ID ${tenantId}:`, error);

@@ -104,11 +104,15 @@ const AddTenantModal = ({ show, onClose, vacantHouses, setTenants }) => {
                     onChange={handleInputChange}
                     >
                     <option value="">Select House</option>
-                    {vacantHouses?.map((house) => (
+                    {vacantHouses?.length > 0 ? (
+                    vacantHouses.map((house) => (
                         <option key={house._id} value={house._id}>
                         {house.house_number}
                         </option>
-                    ))}
+                    ))
+                    ) : (
+                    <option value="" disabled>No vacant houses available</option>
+                    )}
                 </Form.Control>
                 </Form.Group>
             </Form>

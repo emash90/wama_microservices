@@ -6,11 +6,36 @@ const PAYMENT_API_URL = `${BASE_URL}/payment`
 
 console.log("PAYMENT_API_URL", PAYMENT_API_URL)
 
+// Function to get the token from localStorage
+const getAuthToken = () => {
+    return localStorage.getItem('authToken'); // Retrieves the stored token
+  };
+  
+  // Create an axios instance to add the Authorization header for each request
+  const axiosInstance = axios.create();
+  
+  // Interceptor to add the token to headers of each request
+  axiosInstance.interceptors.request.use(
+    (config) => {
+      const token = getAuthToken();
+      if (token) {
+        config.headers['authorization'] = `Bearer ${token}`;
+      }
+      console.log("config ==>", config)
+  
+      return config;
+    },
+    (error) => {
+      return Promise.reject(error);
+    }
+  );
+  
+
 //get all payments
 
 const fetchPayments = async () => {
     try {
-        const response = await axios.get(PAYMENT_API_URL);
+        const response = await axiosInstance.get(PAYMENT_API_URL);
         console.log("response", response)
         return response.data;
       } catch (error) {
@@ -23,7 +48,7 @@ const fetchPayments = async () => {
 
 const addPayment = async (payment) => {
     try {
-        const response = await axios.post(PAYMENT_API_URL, payment);
+        const response = await axiosInstance.post(PAYMENT_API_URL, payment);
         return response.data;
     } catch (error) {
         console.error("Error adding payment:", error);
@@ -34,7 +59,7 @@ const addPayment = async (payment) => {
 
 const fetchPaymentById = async (paymentId) => {
     try {
-        const response = await axios.get(`${PAYMENT_API_URL}/${paymentId}`);
+        const response = await axiosInstance.get(`${PAYMENT_API_URL}/${paymentId}`);
         return response.data;
     } catch (error) {
         console.error(`Error fetching payment with ID ${paymentId}:`, error);
@@ -46,7 +71,7 @@ const fetchPaymentById = async (paymentId) => {
 
 const updatePayment = async (paymentId, payment) => {
     try {
-        const response = await axios.put(`${PAYMENT_API_URL}/${paymentId}`, payment);
+        const response = await axiosInstance.put(`${PAYMENT_API_URL}/${paymentId}`, payment);
         return response.data;
     } catch (error) {
         console.error(`Error updating payment with ID ${paymentId}:`, error);
