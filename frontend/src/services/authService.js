@@ -15,7 +15,7 @@ const loginUser = async (user) => {
         return response;
       } catch (error) {
         console.error("Error fetching users:", error);
-        return error
+        return error.response
       }
 }
 
@@ -27,6 +27,7 @@ const registerUser = async (user) => {
         return response.data;
     } catch (error) {
         console.error("Error registering user:", error);
+        return error.response
     }
 }
 

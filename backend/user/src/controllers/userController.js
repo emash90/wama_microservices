@@ -26,11 +26,14 @@ const login = async (req, res, next) => {
         }
 
         const token = await userService.generateToken(user);
-
-        // Exclude password from the response
-        const { password: _, ...userData } = user._doc;
         // Respond with user data
-        res.status(200).json({ ...userData, token });
+        res.status(200).json({
+            first_name: user.first_name,
+            last_name: user.last_name,
+            email: user.email,
+            token: token,
+            role: user.role
+        });
     } catch (error) {
         next(error);
     }

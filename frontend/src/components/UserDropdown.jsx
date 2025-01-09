@@ -1,27 +1,47 @@
 import React, { useState } from 'react';
-import { FaUser, FaAngleDown, FaSignOutAlt } from 'react-icons/fa';
+import { FaUser, FaAngleDown } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
 const UserDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const userData = localStorage.getItem('user');
+  console.log("user data ===>", JSON.parse(userData));
+  const loggedInUser = userData ? JSON.parse(userData) : null;
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
 
   const handleProfileView = () => {
-    //TODO: add profile view functionalities
-  }
+    navigate('/profile');
+  };
+
   const handleLogout = () => {
     localStorage.removeItem('authToken');
-    navigate('/login')
-    //TODO: add logout functionalities
-  }
+    navigate('/login');
+    // TODO: Add logout functionalities
+  };
+
   return (
-    <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={toggleDropdown}>
-      <FaUser style={{ height: '30px', width: '30px', borderRadius: '50%', marginRight: '5px' }} />
-      <span>John Doe</span>
+    <div 
+      style={{ 
+        display: 'flex', 
+        alignItems: 'center', 
+        cursor: 'pointer', 
+        position: 'relative'  // Ensure dropdown is positioned relative to this container
+      }} 
+      onClick={toggleDropdown}
+    >
+      <FaUser 
+        style={{ 
+          height: '30px', 
+          width: '30px', 
+          borderRadius: '50%', 
+          marginRight: '5px' 
+        }} 
+      />
+      <span>{loggedInUser?.first_name}</span>
       <FaAngleDown style={{ marginLeft: '5px' }} />
 
       {isOpen && (
@@ -33,12 +53,42 @@ const UserDropdown = () => {
             backgroundColor: '#333', 
             padding: '10px', 
             borderRadius: '5px', 
-            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)' ,
-            minWidth: '150px'
+            boxShadow: '0 2px 1px rgba(0, 0, 0, 0.1)', 
+            minWidth: '150px',
+            zIndex: 10
           }}
         >
-          <div onClick={() => { handleProfileView() }}>Profile</div>
-          <div onClick={() => { handleLogout()}}>Logout</div>
+          <div 
+            onClick={handleProfileView} 
+            style={{
+              padding: '2px',
+              marginBottom: '5px',
+              backgroundColor: '#555',
+              color: '#fff',
+              borderRadius: '5px',
+              cursor: 'pointer',
+              textAlign: 'center'
+            }}
+            onMouseEnter={(e) => (e.target.style.backgroundColor = '#666')}
+            onMouseLeave={(e) => (e.target.style.backgroundColor = '#555')}
+          >
+            Profile
+          </div>
+          <div 
+            onClick={handleLogout} 
+            style={{
+              padding: '2px',
+              backgroundColor: '#555',
+              color: '#fff',
+              borderRadius: '5px',
+              cursor: 'pointer',
+              textAlign: 'center'
+            }}
+            onMouseEnter={(e) => (e.target.style.backgroundColor = '#666')}
+            onMouseLeave={(e) => (e.target.style.backgroundColor = '#555')}
+          >
+            Logout
+          </div>
         </div>
       )}
     </div>

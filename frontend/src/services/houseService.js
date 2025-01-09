@@ -65,6 +65,7 @@ const addHouse = async (house) => {
 const fetchHouseById = async (houseId) => {
   try {
     const response = await axiosInstance.get(`${HOUSE_API_URL}/${houseId}`);
+    console.log("house detail response", response)
     return response.data;
   } catch (error) {
     console.error(`Error fetching house with ID ${houseId}:`, error);

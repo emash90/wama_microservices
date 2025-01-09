@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Button, Form, Container, Row, Col } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { fetchUserById, loginUser } from '../services/authService';
+import { toast } from 'react-toastify';
 
 const LoginPage = () => {
   const navigate = useNavigate()
@@ -24,6 +25,7 @@ const LoginPage = () => {
     // Validate the user email
     if (!user.email || user.email === '') {
       console.log("No user email provided");
+      toast.error('email and password required')
       return; // Prevent further execution if email is missing
     }
     
@@ -34,6 +36,7 @@ const LoginPage = () => {
       if (response.status !== 200) {
         // Handle unsuccessful login
         console.log("Login failed:", response);
+        toast.error(`Failed login: ${response.data.message}`)
       } else {
         // Successful login, store token in localStorage
         console.log("Login successful, response:", response);
@@ -41,8 +44,9 @@ const LoginPage = () => {
         // Ensure the response contains a token
         if (response.data && response.data.token) {
           localStorage.setItem('authToken', response.data.token);
+          localStorage.setItem('user', JSON.stringify(response.data));
           console.log('Token saved to localStorage');
-          
+          toast.success('login successful!');
           // Redirect to dashboard
           navigate('/dashboard');
         } else {
@@ -51,6 +55,7 @@ const LoginPage = () => {
       }
     } catch (error) {
       // Handle unexpected errors
+      toast.error(`Login failed: ${error}`)
       console.error("Error during login:", error);
     }
   };  
