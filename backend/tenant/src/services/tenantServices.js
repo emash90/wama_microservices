@@ -1,4 +1,6 @@
 const Tenant = require('../models/tenantModel')
+const { getChannel, connectRabbitMQ } = require('../../utils/rabbitmq');
+
 
 const getTenantsPipeline = () => {
     return [
@@ -48,6 +50,20 @@ const getAllTenants = async () => {
   const createTenant = async (tenantData) => {
     const newTenant = new Tenant(tenantData);
     const response =  await newTenant.save();
+
+  // Publish event to RabbitMQ
+    await connectRabbitMQ(); 
+    const channel = getChannel();
+    const message = JSON.stringify({
+      houseId: tenantData.tenant_house_id,
+      tenantId: newTenant._id,
+    });
+
+    await channel.assertQueue('house_updates');
+    channel.sendToQueue('tenant_created', Buffer.from(message));
+
+    console.log('Tenant created and event published:', message);
+
     //add house details to response
     const pipeline = getTenantsPipeline();
     const tenant = await Tenant.aggregate(pipeline).match({_id: response._id});

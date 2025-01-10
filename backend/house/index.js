@@ -3,6 +3,10 @@ const mongoose = require('mongoose');
 const cors = require('cors')
 require('dotenv').config();
 const connectDB = require('./config/database'); 
+const { listenForTenantCreated } = require('./src/services/houseService');
+
+// Initialize RabbitMQ listener for tenant creation
+listenForTenantCreated();
 
 const houseRoutes = require('./src/routes/houseRoutes');
 
