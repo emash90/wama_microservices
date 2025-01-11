@@ -30,15 +30,22 @@ const AddTenantModal = ({ show, onClose, vacantHouses, setTenants }) => {
       };
 
       const handleAddTenant = async () => {
-        console.log('tenantData', tenantData);
-        const addedTenant = await addTenant(tenantData);
-        if (addedTenant) {
-          console.log('addedTenant', addedTenant);
-          setTenants((prevTenants) => [...prevTenants, addedTenant]);
-          handleClearForm(); // Reset the form
-          onClose(); // Close the modal after adding tenant
-            }
-        };
+        try {
+          console.log('tenantData', tenantData);
+      
+          const addedTenant = await addTenant(tenantData);
+      
+          if (addedTenant) {
+            console.log('addedTenant', addedTenant);
+            setTenants((prevTenants) => [...prevTenants, addedTenant[0]]);
+            handleClearForm();
+            onClose(); 
+          }
+        } catch (error) {
+          console.error('Error adding tenant:', error);
+        }
+      };
+      
         
     const handleClearForm = () => {
         setTenantData({

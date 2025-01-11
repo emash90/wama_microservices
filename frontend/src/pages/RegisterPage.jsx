@@ -32,6 +32,8 @@ const RegisterPage = () => {
       console.log("new user register", resp)
       if (resp && resp.status === 201) {
         toast.success('Registration successful')
+        localStorage.setItem("authToken", resp.data.token)
+        localStorage.setItem('user', JSON.stringify(resp.data));
         navigate('/dashboard')
       }else {
         const message = resp?.data?.message || "Something went wrong!";

@@ -19,6 +19,7 @@ const UserDropdown = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('authToken');
+    localStorage.removeItem('user');
     navigate('/login');
     // TODO: Add logout functionalities
   };

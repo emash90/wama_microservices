@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { CDBContainer, CDBRow, CDBCol, CDBCard, CDBCardBody, CDBDataTable, CDBBtn } from 'cdbreact';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { Menu, MenuItem } from '@mui/material';
@@ -7,13 +7,23 @@ import AddTenantModal from './AddTenantModal';
 
 
 const ListTenants = ({ tenants, setTenants, vacantHouses }) => {
-    
-
+  console.log("tenants latest", tenants)
+  const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
 
   const handleShowAddModal = () => setShowAddModal(true);
   const handleCloseAddModal = () => setShowAddModal(false);
   
+ useEffect(() => {
+    if (tenants) {
+      setLoading(false);
+    }
+  }, [tenants]);
+  
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   const data = () => {
     return {
         columns: [
