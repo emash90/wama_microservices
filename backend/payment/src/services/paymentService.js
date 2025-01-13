@@ -61,7 +61,12 @@ const getPaymentById = async (id) => {
 
 const createPayment= async (houseData) => {
   const newPayment = new Payment(houseData);
-  return await newPayment.save();
+  await newPayment.save();
+  let filter = {
+    _id: newPayment._id
+  }
+  const pipeline = buildPaymentPipeline(filter)
+  return Payment.aggregate(pipeline)
 };
 
 module.exports = {

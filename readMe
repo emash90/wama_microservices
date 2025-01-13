@@ -1,0 +1,43 @@
+# WAMA MICROSERVICES
+
+A **Rental Management System** designed to streamline rental property management with features for managing tenants, houses, and payments. The application leverages **RabbitMQ** for inter-service communication and is deployed on **Google Cloud Run** using containerized microservices.
+
+---
+
+## Features
+
+- **Tenant Management**: Add tenants and mark houses as occupied automatically via RabbitMQ.  
+- **House Management**: Manage houses, track occupancy status, and view details.  
+- **Payment Management**: Track payments, calculate balances, and display monthly income.  
+
+---
+
+## Architecture
+
+### Services
+- **Frontend**: React.js-based user interface.  
+- **API Gateway**: Routes requests to backend services.  
+- **Tenant Service**: Handles tenant operations.  
+- **House Service**: Manages house data.  
+- **Payment Service**: Tracks payments and calculates balances.
+
+### Message Broker
+- **RabbitMQ** for updating house status when tenants are added.
+
+### Deployment
+- Hosted on **Google Cloud Run** for scalability and high availability.
+
+---
+
+## Setup
+
+### Prerequisites
+- Docker  
+- RabbitMQ  
+- Google Cloud CLI  
+
+### Local Development
+1. Clone the repository:
+   ```bash
+   git clone <repository_url>
+   cd wama_microservices

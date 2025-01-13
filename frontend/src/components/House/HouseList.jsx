@@ -72,11 +72,13 @@ const HouseList = ({ houses, viewHouse, setHouses }) => {
           house_type: house.house_type === 1 ? 'Residential' : 'Commercial',
           occupied: house.occupied ? 'Occupied' : 'Vacant',
           actions: (
-            <MoreVertIcon
-              aria-controls="simple-menu"
-              aria-haspopup="true"
-              onClick={(e) => handleMenuOpen(e, house)}
-            />
+            <CDBBtn color="info" size="sm" className="mr-2">
+              <MoreVertIcon
+                aria-controls="simple-menu"
+                aria-haspopup="true"
+                onClick={(e) => handleMenuOpen(e, house)}
+              />
+              </CDBBtn>
           ),
         };
       }),

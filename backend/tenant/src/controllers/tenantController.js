@@ -11,11 +11,11 @@ const getAllTenants = async (req, res, next) => {
 
 const getTenantById = async (req, res, next) => {
   try {
-    const house = await tenantService.getTenantById(req.params.id);
-    if (!house) {
-      return res.status(404).json({ message: 'House not found' });
+    const tenant = await tenantService.getTenantById(req.params.id);
+    if (!tenant) {
+      return res.status(404).json({ message: 'tenant not found' });
     }
-    res.status(200).json(house);
+    res.status(200).json(tenant);
   } catch (error) {
     next(error);
   }

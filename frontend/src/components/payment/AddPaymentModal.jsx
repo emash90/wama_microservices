@@ -79,10 +79,9 @@ const AddPaymentModal = ({ show, onClose, setPayments }) => {
   };
 
   const handleAddPayment = async () => {
-    console.log("paymentData", paymentData)
     const addedPayment = await addPayment(paymentData);
     if (addedPayment) {
-      setPayments((prevPayments) => [...prevPayments, addedPayment]);
+      setPayments((prevPayments) => [...prevPayments, addedPayment[0]]);
     }
     handleClearForm();
   };

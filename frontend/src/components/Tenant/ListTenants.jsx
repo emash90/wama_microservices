@@ -4,16 +4,53 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { Menu, MenuItem } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import AddTenantModal from './AddTenantModal';
+import EditTenantModal from './EditTenantModal'
 
 
 const ListTenants = ({ tenants, setTenants, vacantHouses }) => {
   console.log("tenants latest", tenants)
+  const navigate = useNavigate()
   const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [selectedTenant, setSelectedTenant] = useState(null)
+  const [showEditModal, setShowEditModal] = useState(false);
+
+  
 
   const handleShowAddModal = () => setShowAddModal(true);
   const handleCloseAddModal = () => setShowAddModal(false);
+  const handleCloseEditModal = () => {
+    setShowEditModal(false);
+    setSelectedHouse(null);
+  }
   
+  const handleMenuOpen = (event, tenant) => {
+    setAnchorEl(event.currentTarget);
+    setSelectedTenant(tenant);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleView = () => {
+    console.log("selected tenant", selectedTenant)
+    navigate(`/tenant/${selectedTenant._id}`);
+    handleMenuClose();
+  };
+
+  const handleEdit = () => {
+    setShowEditModal(true);  
+    handleMenuClose(); 
+  };
+
+  const handleDelete = () => {
+    // TODO: Implement delete house
+    handleMenuClose();
+  };
+
+
  useEffect(() => {
     if (tenants) {
       setLoading(false);
@@ -82,8 +119,20 @@ const ListTenants = ({ tenants, setTenants, vacantHouses }) => {
           </CDBCard>
         </CDBCol>
       </CDBRow>
+            <Menu
+              id="simple-menu"
+              anchorEl={anchorEl}
+              keepMounted
+              open={Boolean(anchorEl)}
+              onClose={handleMenuClose}
+            >
+              <MenuItem onClick={handleView}>View</MenuItem>
+              <MenuItem onClick={handleEdit}>Edit</MenuItem>
+              <MenuItem onClick={handleDelete}>Delete</MenuItem>
+            </Menu>
     </CDBContainer >
     <AddTenantModal show={showAddModal} onClose={handleCloseAddModal} vacantHouses={vacantHouses} setTenants={setTenants} />
+    <EditTenantModal show={showEditModal} onClose={handleCloseEditModal} tenant={selectedTenant} setTenants={setTenants} />
     </>
   )
 }
