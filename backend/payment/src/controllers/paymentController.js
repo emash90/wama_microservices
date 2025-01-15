@@ -3,7 +3,6 @@ const paymentService = require('../services/paymentService')
 const findAllPayments = async (req, res, next) => {
     try {
         const payments = await paymentService.getAllPayment()
-        console.log("payments aggregated", payments)
         res.status(200).json(payments)
     } catch (error) {
         next(error)
@@ -12,7 +11,6 @@ const findAllPayments = async (req, res, next) => {
 
 const createPayment = async (req, res, next) => {
     try {
-        console.log("payment", req.body)
         const newPayment = await paymentService.createPayment(req.body);
         res.status(201).json(newPayment);
     } catch (error) {
@@ -32,9 +30,24 @@ const getPaymentById = async(req, res, next) => {
       }
 }
 
+const updatePayment = async (req, res) => {
+      try {
+        const paymentId = req.body._id; // Extract tenant ID from request parameters
+        const updateData = req.body; 
+        const payment = await paymentService.updatePayment(paymentId, updateData);
+        res.status(200).json({
+            message: 'Payment updated successfully',
+            data: payment,
+          });
+      } catch (error) {
+        next(error);
+      }
+}
+
 
 module.exports = {
     findAllPayments,
     createPayment,
-    getPaymentById
+    getPaymentById,
+    updatePayment
 }

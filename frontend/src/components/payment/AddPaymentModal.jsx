@@ -22,7 +22,6 @@ const AddPaymentModal = ({ show, onClose, setPayments }) => {
   useEffect(() => {
     const fetchAllTenants = async () => {
       const tenantList = await fetchTenants();
-      console.log("tenant list", tenantList)
       setTenants(tenantList);
     };
     fetchAllTenants();
@@ -79,10 +78,9 @@ const AddPaymentModal = ({ show, onClose, setPayments }) => {
   };
 
   const handleAddPayment = async () => {
-    console.log("paymentData", paymentData)
     const addedPayment = await addPayment(paymentData);
     if (addedPayment) {
-      setPayments((prevPayments) => [...prevPayments, addedPayment]);
+      setPayments((prevPayments) => [...prevPayments, addedPayment[0]]);
     }
     handleClearForm();
   };

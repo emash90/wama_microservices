@@ -38,6 +38,12 @@ const paymentSchema = new mongoose.Schema({
     month: {
         type: String,
         required: true
+    },
+    status: {
+        type: String,
+        enum: ['confirmed', 'pending'],
+        default: 'pending',
+        required: true
     }
 }, {
     timestamps: true

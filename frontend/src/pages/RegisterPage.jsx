@@ -29,13 +29,15 @@ const RegisterPage = () => {
     } 
     try {
       const resp = await registerUser(newUser)
-      console.log("new user register", resp)
+      // console.log("new user register", resp)
       if (resp && resp.status === 201) {
         toast.success('Registration successful')
+        localStorage.setItem("authToken", resp.data.token)
+        localStorage.setItem('user', JSON.stringify(resp.data));
         navigate('/dashboard')
       }else {
         const message = resp?.data?.message || "Something went wrong!";
-        console.log("error response", message)
+        // console.log("error response", message)
         toast.error(`Failed: ${message}`)
       }
     } catch (error) {
@@ -50,11 +52,11 @@ const RegisterPage = () => {
               <Col md={{ span: 6, offset: 3 }}>
                 <Form className="p-4 shadow rounded bg-light">
                   <h3 className="text-center mb-4">Register</h3>
-                  <Form.Group className="mb-3" controlId="formEmail">
+                  <Form.Group className="mb-3" controlId="formFirstName">
                     <Form.Label>First Name</Form.Label>
                     <Form.Control type="text" placeholder="Enter your first name" name='first_name' value={newUser.first_name} onChange={handleInputChange} />
                   </Form.Group>
-                  <Form.Group className="mb-3" controlId="formEmail">
+                  <Form.Group className="mb-3" controlId="formLastName">
                     <Form.Label>Last Name</Form.Label>
                     <Form.Control type="text" placeholder="Enter your last name" name='last_name' value={newUser.last_name}  onChange={handleInputChange}/>
                   </Form.Group>

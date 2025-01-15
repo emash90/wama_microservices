@@ -25,6 +25,10 @@ const tenantSchema = new mongoose.Schema({
     tenant_rent: {
         type: Number,
         required: true
+    },
+    active: {
+        type: Boolean,
+        default: true
     }
 }, {
     timestamps: true

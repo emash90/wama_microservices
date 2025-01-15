@@ -1,6 +1,16 @@
 version: '3.8'
 
 services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"   # RabbitMQ message broker
+      - "15672:15672" # RabbitMQ management UI
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+
   api-gateway:
     build:
       context: ./backend/api-gateway
@@ -11,6 +21,7 @@ services:
       - "4000:4000"
     environment:
       NODE_ENV: development
+      RABBITMQ_URL: amqp://rabbitmq:5672
     env_file:
       - .env
     command: npm run dev
@@ -19,6 +30,7 @@ services:
       - user
       - tenant
       - house
+      - rabbitmq
 
   payment:
     build:
@@ -30,12 +42,14 @@ services:
       - "4003:4003"
     environment:
       NODE_ENV: development
+      RABBITMQ_URL: amqp://rabbitmq:5672
     env_file:
       - .env
     command: npm run dev
     depends_on:
       - tenant
       - house
+      - rabbitmq
 
   user:
     build:
@@ -47,9 +61,12 @@ services:
       - "4004:4004"
     environment:
       NODE_ENV: development
+      RABBITMQ_URL: amqp://rabbitmq:5672
     env_file:
       - .env
     command: npm run dev
+    depends_on:
+      - rabbitmq
 
   tenant:
     build:
@@ -61,9 +78,12 @@ services:
       - "4001:4001"
     environment:
       NODE_ENV: development
+      RABBITMQ_URL: amqp://rabbitmq:5672
     env_file:
       - .env
     command: npm run dev
+    depends_on:
+      - rabbitmq
 
   house:
     build:
@@ -75,9 +95,12 @@ services:
       - "4002:4002"
     environment:
       NODE_ENV: development
+      RABBITMQ_URL: amqp://rabbitmq:5672
     env_file:
       - .env
     command: npm run dev
+    depends_on:
+      - rabbitmq
 
   frontend:
     build:
