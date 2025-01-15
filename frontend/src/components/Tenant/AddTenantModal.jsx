@@ -3,7 +3,6 @@ import { Modal, Button, Form } from 'react-bootstrap';
 import { addTenant } from '../../services/tenantServices';
 
 const AddTenantModal = ({ show, onClose, vacantHouses, setTenants }) => {
-    console.log('vacantHouses', vacantHouses);
     const [tenantData, setTenantData] = useState({
         tenant_first_name: '',
         tenant_last_name: '',
@@ -24,20 +23,17 @@ const AddTenantModal = ({ show, onClose, vacantHouses, setTenants }) => {
             const selectedHouse = vacantHouses.find((house) => house._id === value);
             updatedData.tenant_rent = selectedHouse ? selectedHouse.house_price : 0;
           }
-          console.log('updatedData', updatedData);
           return updatedData;
         });
       };
 
       const handleAddTenant = async () => {
         try {
-          console.log('tenantData', tenantData);
       
           const addedTenant = await addTenant(tenantData);
       
           if (addedTenant) {
-            console.log('addedTenant', addedTenant);
-            setTenants((prevTenants) => [...prevTenants, addedTenant[0]]);
+            setTenants((prevTenants) => [addedTenant, ...prevTenants]);
             handleClearForm();
             onClose(); 
           }

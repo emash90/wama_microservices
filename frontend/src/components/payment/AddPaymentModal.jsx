@@ -22,7 +22,6 @@ const AddPaymentModal = ({ show, onClose, setPayments }) => {
   useEffect(() => {
     const fetchAllTenants = async () => {
       const tenantList = await fetchTenants();
-      console.log("tenant list", tenantList)
       setTenants(tenantList);
     };
     fetchAllTenants();

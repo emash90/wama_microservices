@@ -4,7 +4,7 @@ const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
 
 const HOUSE_API_URL = `${BASE_URL}/house`;
 
-console.log("HOUSE_API_URL", HOUSE_API_URL);
+// console.log("HOUSE_API_URL", HOUSE_API_URL);
 
 // Function to get the token from localStorage
 const getAuthToken = () => {
@@ -21,7 +21,6 @@ axiosInstance.interceptors.request.use(
     if (token) {
       config.headers['authorization'] = `Bearer ${token}`;
     }
-    console.log("config ==>", config)
 
     return config;
   },
@@ -34,7 +33,6 @@ axiosInstance.interceptors.request.use(
 const fetchHouses = async () => {
   try {
     const response = await axiosInstance.get(HOUSE_API_URL);
-    console.log("response", response);
     return response.data;
   } catch (error) {
     console.error("Error fetching houses:", error);
@@ -65,7 +63,6 @@ const addHouse = async (house) => {
 const fetchHouseById = async (houseId) => {
   try {
     const response = await axiosInstance.get(`${HOUSE_API_URL}/${houseId}`);
-    console.log("house detail response", response)
     return response.data;
   } catch (error) {
     console.error(`Error fetching house with ID ${houseId}:`, error);

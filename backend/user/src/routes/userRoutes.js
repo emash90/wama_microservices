@@ -8,6 +8,7 @@ router.get('/', userController.getAllUsers)
 router.get('/:id', userController.getUserById)
 router.post('/login', userController.login)
 router.post('/register', userController.createUser)
+router.post('/authenticate', userController.authenticateUser)
 
 
 module.exports = router

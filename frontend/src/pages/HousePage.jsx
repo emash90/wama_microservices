@@ -7,7 +7,6 @@ const HousePage = () => {
     useEffect(() => {
         const loadHouses = async () => {
           const data = await fetchHouses()
-          console.log("data ===>", data)
           setHouses(data);
         };
         loadHouses();
@@ -15,7 +14,6 @@ const HousePage = () => {
     //define function to get house by Id
     const viewHouse = async(houseId) => {
         const response = await fetchHouseById(houseId);
-        console.log("response", response)
     }
   return (
     <div>

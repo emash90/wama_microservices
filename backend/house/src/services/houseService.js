@@ -2,38 +2,34 @@ const mongoose = require('mongoose');
 const House = require('../models/houseModel');
 const { connectRabbitMQ, getChannel } = require('../../utils/rabbitmq');
 
-// Get all houses
 const getAllHouses = async () => {
   return await House.find();
 };
 
-// Get house by ID
 const getHouseById = async (id) => {
   return await House.findById(id);
 };
 
-// Find house by number
-const findHouseByNumber = async(house_number) => {
-  return await House.findOne({house_number});
+const findHouseByNumber = async (house_number) => {
+  return await House.findOne({ house_number });
 };
 
-// Create a new house
 const createHouse = async (houseData) => {
   const newHouse = new House(houseData);
   return await newHouse.save();
 };
 
-// Update a house (general purpose)
 const updateHouse = async (id, houseData) => {
   return await House.findByIdAndUpdate(id, houseData, { new: true });
 };
 
-// Update house when a tenant is added (specifically set "occupied" to true)
-const updateHouseOccupiedStatus = async (houseId) => {
+const updateHouseOccupiedStatus = async (houseId, occupiedStatus) => {
   try {
-    const objectId =new mongoose.Types.ObjectId(houseId);
-    console.log("object id", objectId)
-    const updatedHouse = await House.findByIdAndUpdate(objectId, { occupied: true }, { new: true });
+    const updatedHouse = await House.findByIdAndUpdate(
+      houseId,
+      { occupied: occupiedStatus },
+      { new: true }
+    );
     return updatedHouse;
   } catch (error) {
     console.error('Error updating house occupied status:', error);
@@ -41,30 +37,30 @@ const updateHouseOccupiedStatus = async (houseId) => {
   }
 };
 
-// RabbitMQ listener function to listen for tenant creation messages
 const listenForTenantCreated = async () => {
   try {
-    await connectRabbitMQ(); 
-    const channel = await getChannel();
-    const queue = 'tenant_created';
+    await connectRabbitMQ();
+    const channel = getChannel();
+    const queue = 'house_updates';
+
     await channel.assertQueue(queue, { durable: true });
 
     channel.consume(queue, async (msg) => {
       if (msg.content) {
         const tenantData = JSON.parse(msg.content.toString());
-        console.log("tenant data", tenantData)
-  
-        const houseId = tenantData.houseId;
 
-        // Update the house occupied status
-        const updatedHouse = await updateHouseOccupiedStatus(houseId);
-        console.log("updated house", updatedHouse)
-        
+        const houseId = tenantData.houseId;
+        const status = tenantData.status === 'vacant' ? false : true;
+
+        // Update house occupied status
+        await updateHouseOccupiedStatus(houseId, status);
+        console.log(`Updated house ${houseId} to occupied status: ${status}`);
+
         channel.ack(msg);
       }
     });
 
-    console.log('Listening for tenant created messages...');
+    console.log('Listening for house update messages...');
   } catch (error) {
     console.error('Error in RabbitMQ listener:', error);
   }

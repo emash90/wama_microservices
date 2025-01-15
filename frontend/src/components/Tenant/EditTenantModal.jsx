@@ -21,7 +21,6 @@ const EditTenantModal = ({ tenant, onClose, show, setTenants }) => {
     };
 
     const handleEditTenant = async() => {
-        console.log("tenant to edit", newTenantDetails)
         const response = await updateHouse(house._id, newHouseDetails);
         if (response) {
             setHouses((prevHouses) => {

@@ -6,7 +6,6 @@ const UserDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   const userData = localStorage.getItem('user');
-  console.log("user data ===>", JSON.parse(userData));
   const loggedInUser = userData ? JSON.parse(userData) : null;
 
   const toggleDropdown = () => {

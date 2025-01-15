@@ -69,8 +69,36 @@ const createPayment= async (houseData) => {
   return Payment.aggregate(pipeline)
 };
 
+const updatePayment = async (id, updateData) => {
+  try {
+    // Find and update the payment record
+    const updatedPayment = await Payment.findByIdAndUpdate(
+      id,
+      { $set: updateData }, // Apply the updates
+      { new: true, runValidators: true } // Return the updated document and validate updates
+    );
+
+    if (!updatedPayment) {
+      throw new Error(`Payment with ID ${id} not found`);
+    }
+
+    // Build a filter to fetch the updated record with details
+    const filter = { _id: updatedPayment._id };
+    const pipeline = buildPaymentPipeline(filter);
+
+    // Fetch the updated record with tenant and house details
+    const result = await Payment.aggregate(pipeline);
+    return result.length > 0 ? result[0] : null;
+  } catch (error) {
+    console.error(`Error updating payment: ${error.message}`);
+    throw error;
+  }
+};
+
+
 module.exports = {
     getAllPayment,
     getPaymentById,
     createPayment,
+    updatePayment
 };

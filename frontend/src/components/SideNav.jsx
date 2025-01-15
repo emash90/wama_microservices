@@ -31,7 +31,7 @@ const SideNav = ({ onToggle }) => {
           <CDBLink to="/payment" className="d-flex align-items-center">
             <CDBSidebarMenuItem icon="money-bill-wave">Payments</CDBSidebarMenuItem>
           </CDBLink>
-          <CDBLink to="/report" className="d-flex align-items-center">
+          <CDBLink to="/reports" className="d-flex align-items-center">
             <CDBSidebarMenuItem icon="file-alt">Reports</CDBSidebarMenuItem>
           </CDBLink>
         </CDBSidebarMenu>

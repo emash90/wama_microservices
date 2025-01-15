@@ -4,7 +4,7 @@ const BASE_URL = import.meta.env.VITE_API_URL|| 'http://localhost:4000'
 
 const PAYMENT_API_URL = `${BASE_URL}/payment`
 
-console.log("PAYMENT_API_URL", PAYMENT_API_URL)
+// console.log("PAYMENT_API_URL", PAYMENT_API_URL)
 
 // Function to get the token from localStorage
 const getAuthToken = () => {
@@ -21,7 +21,6 @@ const getAuthToken = () => {
       if (token) {
         config.headers['authorization'] = `Bearer ${token}`;
       }
-      console.log("config ==>", config)
   
       return config;
     },
@@ -36,7 +35,7 @@ const getAuthToken = () => {
 const fetchPayments = async () => {
     try {
         const response = await axiosInstance.get(PAYMENT_API_URL);
-        console.log("response", response)
+        // console.log("response", response)
         return response.data;
       } catch (error) {
         console.error("Error fetching payments:", error);

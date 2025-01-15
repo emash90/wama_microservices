@@ -9,9 +9,13 @@ import {
   CDBBtn,
 } from 'cdbreact';
 import AddPaymentModal from './AddPaymentModal';
+import EditPaymentModal from './EditPaymentModal';
 import { Menu, MenuItem } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useNavigate } from 'react-router-dom';
+import { updatePayment } from '../../services/paymentService';
+import { toast } from 'react-toastify';
+
 
 
 
@@ -21,15 +25,20 @@ const PaymentList = ({ payments, setPayments }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedPayment, setSelectedPayment] = useState()
   const navigate = useNavigate()
-  
 
   const handleShowAddModal = () => setShowAddModal(true);
   const handleCloseAddModal = () => setShowAddModal(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  
 
   const handleMenuOpen = (event, payment) => {
     setAnchorEl(event.currentTarget);
     setSelectedPayment(payment);
   };
+  const handleCloseEditModal = () => {
+    setShowEditModal(false);
+    setSelectedPayment(null);
+  }
 
   const handleMenuClose = () => {
     setAnchorEl(null);
@@ -41,14 +50,40 @@ const PaymentList = ({ payments, setPayments }) => {
   };
 
   const handleEdit = () => {
-    console.log("selected payment", selectedPayment)
-    // setShowEditModal(true);  
+    setShowEditModal(true);  
     handleMenuClose(); 
   };
 
-  const handleDelete = () => {
-    // TODO: Implement delete house
-    handleMenuClose();
+  const handlePaymentConfirm = async() => {
+    // TODO: Implement payment confirmation
+    try {
+      // Prepare the updated tenant object with active set to false
+      const updatedPayment = {
+        ...selectedPayment,
+        status: "confirmed",
+      };
+  
+      // Call the updateTenant API with the selected tenant's ID and updated data
+      const response = await updatePayment(selectedPayment.id, updatedPayment);
+  
+      if (response) {
+        toast.success("payment confirmed successfully");
+        setPayments((prevPayments) =>
+          prevPayments.map((payment) =>
+            payment._id === selectedPayment._id ? { ...payment, status: 'confirmed' } : payment
+          )
+        );
+
+      } else {
+        console.error("Failed to update payment");
+        toast.error("Failed to update payment");
+      }
+    } catch (error) {
+      console.error("Error updating payment:", error);
+      toast.error("Error updating payment");
+    } finally {
+      handleMenuClose();
+    }
   };
 
   // Prepare data for CDBDataTable
@@ -123,11 +158,12 @@ const PaymentList = ({ payments, setPayments }) => {
       >
         <MenuItem onClick={handleView}>View</MenuItem>
         <MenuItem onClick={handleEdit}>Edit</MenuItem>
-        <MenuItem onClick={handleDelete}>Delete</MenuItem>
+        <MenuItem onClick={handlePaymentConfirm}>Confirm Payment</MenuItem>
       </Menu>
       </CDBContainer>
 
       <AddPaymentModal show={showAddModal} onClose={handleCloseAddModal} setPayments={setPayments} />
+      <EditPaymentModal show={showEditModal} onClose={handleCloseEditModal} selectedPayment={selectedPayment} setPayments={setPayments} />
     </>
   );
 };

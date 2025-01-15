@@ -11,12 +11,10 @@ const TenantPage = () => {
   useEffect(() => {
     const loadTenants = async () => {
       const data = await fetchTenants()
-      console.log('data ===>', data)
       setTenants(data)
     }
     const emptyHouses = async () => {
       const data = await fetchHouses()
-      console.log('empty house data ===>', data)
       const emptyHouses = data.filter(house => house.occupied === false)
       setVacantHouses(emptyHouses)
     }

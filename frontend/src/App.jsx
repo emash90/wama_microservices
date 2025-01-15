@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Layout from './components/Layout';
 import HouseDetails from './components/House/HouseDetails';
 import TenantDetails from './components/Tenant/TenantDetails'
-import { LoginPage, RegisterPage, HousePage, TenantPage, PaymentPage, Dashboard, ProfilePage } from './pages/index';
+import { LoginPage, RegisterPage, HousePage, TenantPage, PaymentPage, Dashboard, ProfilePage, Reports } from './pages/index';
 import PrivateRoute from './components/PrivateRoute'
 
 
@@ -30,6 +30,7 @@ function App() {
                 <Route path="/tenant/:id" element={ <PrivateRoute> <TenantDetails /></PrivateRoute>} />
                 <Route path="/payment" element={ <PrivateRoute> <PaymentPage /></PrivateRoute>} />
                 <Route path="/profile" element={ <PrivateRoute> <ProfilePage /></PrivateRoute>} />
+                <Route path="/reports" element={ <PrivateRoute> <Reports /></PrivateRoute>} />
                 <Route path="/logout" element={<div>Logout Page</div>} />
               </Routes>
             </Layout>

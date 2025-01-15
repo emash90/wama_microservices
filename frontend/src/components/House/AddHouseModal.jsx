@@ -23,8 +23,7 @@ const AddHouseModal = ({ show, onClose, setHouses }) => {
     houseData.house_type = parseInt(houseData.house_type, 10);
     const addedHouse = await addHouse(houseData);
     if (addedHouse) {
-      console.log('addedHouse', addedHouse);
-      setHouses((prevHouses) => [...prevHouses, addedHouse]);
+      setHouses((prevHouses) => [addedHouse, ...prevHouses]);
     }
     handleClearForm();
   };

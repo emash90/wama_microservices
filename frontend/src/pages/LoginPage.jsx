@@ -20,11 +20,9 @@ const LoginPage = () => {
   }
 
   const handleLoginUser = async () => {
-    console.log("login details", user);
     
     // Validate the user email
     if (!user.email || user.email === '') {
-      console.log("No user email provided");
       toast.error('email and password required')
       return; // Prevent further execution if email is missing
     }
@@ -35,17 +33,15 @@ const LoginPage = () => {
       
       if (response.status !== 200) {
         // Handle unsuccessful login
-        console.log("Login failed:", response);
         toast.error(`Failed login: ${response.data.message}`)
       } else {
         // Successful login, store token in localStorage
-        console.log("Login successful, response:", response);
         
         // Ensure the response contains a token
         if (response.data && response.data.token) {
           localStorage.setItem('authToken', response.data.token);
           localStorage.setItem('user', JSON.stringify(response.data));
-          console.log('Token saved to localStorage');
+          // console.log('Token saved to localStorage');
           toast.success('login successful!');
           // Redirect to dashboard
           navigate('/dashboard');

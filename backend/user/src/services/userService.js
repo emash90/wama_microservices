@@ -37,11 +37,23 @@ const generateToken = (user) => {
     return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
 };
 
+const checkToken = (token) => {
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        return decoded;
+
+    } catch (err) {
+        return ({ message: 'Invalid or expired token.' });
+    }
+};
+
+
 module.exports = {
     getAllUsers,
     getUserById,
     createUser,
     findOne,
     checkPassword,
-    generateToken
+    generateToken,
+    checkToken
 }

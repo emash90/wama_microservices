@@ -75,9 +75,43 @@ const getUserById = async (req, res, next) => {
     }
 }
 
+const authenticateUser = async (req, res, next) => {
+    try {
+        const { token } = req.body;
+
+        if (!token) {
+            return res.status(400).json({
+                isValid: false,
+                message: 'Token is required.',
+            });
+        }
+
+        const decodedUser = await userService.checkToken(token);
+        if (decodedUser.message && decodedUser.message.includes('Invalid or expired token')) {
+            return res.status(403).json({
+                isValid: false,
+                message: 'Invalid or expired token.',
+            });
+        }
+
+        return res.status(200).json({
+            isValid: true,
+            data: decodedUser,
+        });
+    } catch (error) {
+        console.error('Error authenticating user:', error);
+        return res.status(500).json({
+            isValid: false,
+            message: 'An error occurred while processing your request.',
+        });
+    }
+};
+
+
 module.exports = {
     getAllUsers,
     createUser,
     login,
     getUserById,
+    authenticateUser
 }

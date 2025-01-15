@@ -7,7 +7,7 @@ const PaymentPage = () => {
 
   const fetchAllPayments = async() => {
     const payment_resp = await fetchPayments()
-    console.log("payment resp", payment_resp)
+    // console.log("payment resp", payment_resp)
     setPayments(payment_resp)
   }
 

@@ -11,7 +11,6 @@ const Layout = ({ children }) => {
   const handleToggle = () => {
     setIsCollapsed(prevState => !prevState);
   };
-console.log(isCollapsed)
   return (
     <Container fluid style={{ height: '100vh', overflow: 'hidden', paddingLeft: 0, paddingRight: 0 }}>
       <Row style={{ height: '100%' }}>
