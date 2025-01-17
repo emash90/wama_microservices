@@ -6,20 +6,20 @@ A **Rental Management System** designed to streamline rental property management
 
 ## **Features**
 
-### **Tenant Management**
+### Tenant Management
 - Add tenants and automatically update house occupancy status using RabbitMQ.
 
-### **House Management**
+### House Management
 - Manage property data, track occupancy status, and view house details.
 
-### **Payment Management**
+### Payment Management
 - Track payments, calculate outstanding balances, and display monthly income reports.
 
 ---
 
 ## **Architecture**
 
-### **Microservices**
+### Microservices
 - **Frontend**  
   - Built with **React.js**, offering an intuitive and responsive user interface.
 - **API Gateway**  
@@ -31,23 +31,23 @@ A **Rental Management System** designed to streamline rental property management
 - **Payment Service**  
   - Tracks rental payments, calculates balances, and reports income.
 
-### **Message Broker**
-- **RabbitMQ** is used to facilitate communication between services, ensuring that updates (e.g., house occupancy) propagate seamlessly.
+### Message Broker
+- **RabbitMQ** facilitates communication between services, ensuring seamless updates (e.g., house occupancy).
 
-### **Deployment**
+### Deployment
 - Hosted on **Google Cloud Run** for scalability, reliability, and high availability.
 
 ---
 
 ## **Setup**
 
-### **Prerequisites**
+### Prerequisites
 Ensure the following tools are installed before starting:  
 - **Docker**  
 - **RabbitMQ**  
 - **Google Cloud CLI**
 
-### **Local Development**
+### Local Development
 
 1. **Clone the Repository**  
    ```bash
