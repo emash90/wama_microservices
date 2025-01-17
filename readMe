@@ -1,10 +1,10 @@
-# **WAMA Microservices**
+# WAMA Microservices
 
 A **Rental Management System** designed to streamline rental property management, featuring robust tools for managing tenants, houses, and payments. This system uses **RabbitMQ** for inter-service communication and is deployed on **Google Cloud Run** via containerized microservices.
 
 ---
 
-## **Features**
+## Features
 
 ### Tenant Management
 - Add tenants and automatically update house occupancy status using RabbitMQ.
@@ -17,19 +17,19 @@ A **Rental Management System** designed to streamline rental property management
 
 ---
 
-## **Architecture**
+## Architecture
 
 ### Microservices
 - **Frontend**  
-  - Built with **React.js**, offering an intuitive and responsive user interface.
+  Built with **React.js**, offering an intuitive and responsive user interface.
 - **API Gateway**  
-  - Routes incoming requests to the appropriate backend services.
+  Routes incoming requests to the appropriate backend services.
 - **Tenant Service**  
-  - Handles all tenant-related operations.
+  Handles all tenant-related operations.
 - **House Service**  
-  - Manages house data, including status and details.
+  Manages house data, including status and details.
 - **Payment Service**  
-  - Tracks rental payments, calculates balances, and reports income.
+  Tracks rental payments, calculates balances, and reports income.
 
 ### Message Broker
 - **RabbitMQ** facilitates communication between services, ensuring seamless updates (e.g., house occupancy).
@@ -39,7 +39,7 @@ A **Rental Management System** designed to streamline rental property management
 
 ---
 
-## **Setup**
+## Setup
 
 ### Prerequisites
 Ensure the following tools are installed before starting:  
@@ -49,7 +49,7 @@ Ensure the following tools are installed before starting:
 
 ### Local Development
 
-1. **Clone the Repository**  
+1. Clone the Repository:  
    ```bash
    git clone <repository_url>
    cd wama_microservices
