@@ -34,6 +34,7 @@ const getTenantsPipeline = (filter = {}) => [
       createdAt: 1,
       tenant_rent: 1,
       active: 1,
+      balance: 1,
       tenant_house: '$tenant_house.house_number',
       house_type: '$tenant_house.house_type',
       house_id: '$tenant_house._id'
@@ -62,7 +63,8 @@ const findTenantByPhoneNumber = async (tenant_phone) => {
 };
 
 const createTenant = async (tenantData) => {
-  const newTenant = new Tenant(tenantData);
+  tenantData.balance = tenantData.tenant_rent * 2
+  let newTenant = new Tenant(tenantData);
   const response = await newTenant.save();
 
   try {

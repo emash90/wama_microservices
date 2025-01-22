@@ -92,6 +92,7 @@ const ListTenants = ({ tenants, setTenants, vacantHouses }) => {
       { label: 'Phone Number', field: 'tenant_phone', width: 150 },
       { label: 'Tenant Rent', field: 'tenant_rent', width: 150 },
       { label: 'Tenant House', field: 'tenant_house', width: 150 },
+      { label: 'Tenant Balance', field: 'tenant_balance', width: 150 },
       { label: 'Actions', field: 'actions', width: 150 },
     ],
     rows: tenants.filter((tenant) => tenant.active).map((tenant) => ({
@@ -99,6 +100,7 @@ const ListTenants = ({ tenants, setTenants, vacantHouses }) => {
       tenant_last_name: tenant.tenant_last_name,
       tenant_phone: tenant.tenant_phone,
       tenant_rent: tenant.tenant_rent,
+      tenant_balance: tenant.balance || 0,
       tenant_house: `${tenant.tenant_house} (${tenant.active ? 'Active' : 'Inactive'})`,
       actions: (
         <CDBBtn color="info" size="sm" className="mr-2">
