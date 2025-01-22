@@ -30,6 +30,7 @@ const getTenantsPipeline = () => [
       tenant_rent: 1,
       active: 1,
       tenant_house: '$tenant_house.house_number',
+      house_type: '$tenant_house.house_type'
     },
   },
 ];

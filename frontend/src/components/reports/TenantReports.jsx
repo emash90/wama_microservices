@@ -9,8 +9,8 @@ const TenantReports = ({ tenants }) => {
   const totalTenants = tenants.length;
   const activeTenants = tenants.filter((tenant) => tenant.active).length;
   const inactiveTenants = tenants.filter((tenant) => !tenant.active).length;
-  const maleTenants = tenants.filter((tenant) => tenant.gender === 'male').length;
-  const femaleTenants = tenants.filter((tenant) => tenant.gender === 'female').length;
+  const residentialTenants = tenants.filter((tenant) => tenant.house_type === 1).length;
+  const commercialTenants = tenants.filter((tenant) => tenant.house_type === 0).length;
 
   const pieData = {
     labels: ['Active Tenants', 'Inactive Tenants'],
@@ -24,11 +24,11 @@ const TenantReports = ({ tenants }) => {
   };
 
   const barData = {
-    labels: ['Male Tenants', 'Female Tenants'],
+    labels: ['Residential Tenants', 'Commercial Tenants'],
     datasets: [
       {
-        label: 'Gender Distribution',
-        data: [maleTenants, femaleTenants],
+        label: 'Tenant Type',
+        data: [residentialTenants, commercialTenants],
         backgroundColor: ['#42A5F5', '#FF7043'],
       },
     ],
@@ -67,8 +67,8 @@ const TenantReports = ({ tenants }) => {
               <h4>Total Tenants: {totalTenants}</h4>
               <p>Active Tenants: {activeTenants} ({((activeTenants / totalTenants) * 100).toFixed(2)}%)</p>
               <p>Inactive Tenants: {inactiveTenants} ({((inactiveTenants / totalTenants) * 100).toFixed(2)}%)</p>
-              <p>Male Tenants: {maleTenants} ({((maleTenants / totalTenants) * 100).toFixed(2)}%)</p>
-              <p>Female Tenants: {femaleTenants} ({((femaleTenants / totalTenants) * 100).toFixed(2)}%)</p>
+              <p>Residential Tenants: {residentialTenants} ({((residentialTenants / totalTenants) * 100).toFixed(2)}%)</p>
+              <p>Commercial Tenants: {commercialTenants} ({((commercialTenants / totalTenants) * 100).toFixed(2)}%)</p>
             </CDBCardBody>
           </CDBCard>
         </CDBCol>
