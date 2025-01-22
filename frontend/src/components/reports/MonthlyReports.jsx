@@ -24,7 +24,7 @@ const MonthlyReports = ({ houses, payments, tenants }) => {
     const occupiedHouses = houses.filter((house) => house.occupied === true);
     const unoccupiedHouses = houses.filter((house) => house.occupied === false);
 
-    const totalExpectedRent = occupiedHouses.reduce((sum, house) => sum + house.rent, 0);
+    const totalExpectedRent = occupiedHouses.reduce((sum, house) => sum + house.house_price, 0);
     const receivedRent = selectedPayments.reduce((sum, payment) => sum + payment.amount_paid, 0);
 
     const totalBalances = payments.reduce((sum, payment) => sum + (payment.balance || 0), 0);

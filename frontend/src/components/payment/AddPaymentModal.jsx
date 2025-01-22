@@ -22,11 +22,11 @@ const AddPaymentModal = ({ show, onClose, setPayments }) => {
   useEffect(() => {
     const fetchAllTenants = async () => {
       const tenantList = await fetchTenants();
-      setTenants(tenantList);
+      const activeTenants = tenantList.filter((tenant) => tenant.active)
+      setTenants(activeTenants);
     };
     fetchAllTenants();
   }, []);
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setPaymentData((prevData) => ({
@@ -41,9 +41,8 @@ const AddPaymentModal = ({ show, onClose, setPayments }) => {
 
     if (tenantId) {
       const tenantHouseId = await fetchTenantById(tenantId)
-      
       if (tenantHouseId) {
-        const house = await fetchHouseById(tenantHouseId.tenant_house_id)
+        const house = await fetchHouseById(tenantHouseId[0].house_id)
         setPaymentData((prevData) => ({
           ...prevData,
           house_id: house._id,

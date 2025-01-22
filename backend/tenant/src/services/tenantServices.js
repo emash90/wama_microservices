@@ -2,7 +2,10 @@ const Tenant = require('../models/tenantModel');
 const mongoose = require('mongoose');
 const { getChannel, connectRabbitMQ } = require('../../utils/rabbitmq');
 
-const getTenantsPipeline = () => [
+const getTenantsPipeline = (filter = {}) => [
+  {
+    $match: filter,
+  },
   {
     $lookup: {
       from: 'houses',
@@ -27,13 +30,17 @@ const getTenantsPipeline = () => [
       tenant_first_name: 1,
       tenant_last_name: 1,
       tenant_phone: 1,
+      tenant_email: 1,
+      createdAt: 1,
       tenant_rent: 1,
       active: 1,
       tenant_house: '$tenant_house.house_number',
-      house_type: '$tenant_house.house_type'
+      house_type: '$tenant_house.house_type',
+      house_id: '$tenant_house._id'
     },
   },
 ];
+
 
 const getAllTenants = async () => {
   const pipeline = getTenantsPipeline();
@@ -41,7 +48,13 @@ const getAllTenants = async () => {
 };
 
 const getTenantById = async (id) => {
-  return await Tenant.findById(id);
+  const objectId = new mongoose.Types.ObjectId(id);
+
+  const pipeline = getTenantsPipeline({ _id: objectId });
+
+  const tenants = await Tenant.aggregate(pipeline);
+
+  return tenants
 };
 
 const findTenantByPhoneNumber = async (tenant_phone) => {

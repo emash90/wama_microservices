@@ -23,6 +23,7 @@ const getHouseById = async (req, res, next) => {
 
 const createHouse = async (req, res, next) => {
   try {
+    
     //check if house exists
     const {house_number} = req.body
     const houseExist = await houseService.findHouseByNumber(house_number)

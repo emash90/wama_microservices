@@ -32,6 +32,7 @@ const createTenant = async (req, res, next) => {
           data: tenantExist
          });
       }
+      
     const newTenant = await tenantService.createTenant(req.body);
     res.status(201).json(newTenant);
   } catch (error) {

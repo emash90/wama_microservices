@@ -8,7 +8,7 @@ ChartJS.register(ArcElement, Tooltip, Legend, BarElement, CategoryScale, LinearS
 const PaymentReports = ({ payments }) => {
   const totalPayments = payments.length;
   const paidPayments = payments.filter((payment) => payment.status === 'confirmed').length;
-  const pendingPayments = payments.filter((payment) => payment.status === 'Pending').length;
+  const pendingPayments = payments.filter((payment) => payment.status === 'pending').length;
 
   const totalRevenue = payments.reduce((sum, payment) => sum + (payment.amount_paid || 0), 0);
 

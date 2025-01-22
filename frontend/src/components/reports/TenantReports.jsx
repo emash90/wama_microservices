@@ -9,8 +9,8 @@ const TenantReports = ({ tenants }) => {
   const totalTenants = tenants.length;
   const activeTenants = tenants.filter((tenant) => tenant.active).length;
   const inactiveTenants = tenants.filter((tenant) => !tenant.active).length;
-  const residentialTenants = tenants.filter((tenant) => tenant.house_type === 1).length;
-  const commercialTenants = tenants.filter((tenant) => tenant.house_type === 0).length;
+  const activeResidentialTenants = tenants.filter((tenant) => tenant.active && tenant.house_type === 1).length;
+  const activeCommercialTenants = tenants.filter((tenant) => tenant.active && tenant.house_type === 2).length;
 
   const pieData = {
     labels: ['Active Tenants', 'Inactive Tenants'],
@@ -24,11 +24,11 @@ const TenantReports = ({ tenants }) => {
   };
 
   const barData = {
-    labels: ['Residential Tenants', 'Commercial Tenants'],
+    labels: ['Active Residential Tenants', 'Active Commercial Tenants'],
     datasets: [
       {
         label: 'Tenant Type',
-        data: [residentialTenants, commercialTenants],
+        data: [activeResidentialTenants, activeCommercialTenants],
         backgroundColor: ['#42A5F5', '#FF7043'],
       },
     ],
@@ -67,8 +67,8 @@ const TenantReports = ({ tenants }) => {
               <h4>Total Tenants: {totalTenants}</h4>
               <p>Active Tenants: {activeTenants} ({((activeTenants / totalTenants) * 100).toFixed(2)}%)</p>
               <p>Inactive Tenants: {inactiveTenants} ({((inactiveTenants / totalTenants) * 100).toFixed(2)}%)</p>
-              <p>Residential Tenants: {residentialTenants} ({((residentialTenants / totalTenants) * 100).toFixed(2)}%)</p>
-              <p>Commercial Tenants: {commercialTenants} ({((commercialTenants / totalTenants) * 100).toFixed(2)}%)</p>
+              <p>Active Residential Tenants: {activeResidentialTenants} ({((activeResidentialTenants / activeTenants) * 100).toFixed(2)}%)</p>
+              <p>Active Commercial Tenants: {activeCommercialTenants} ({((activeCommercialTenants / activeTenants) * 100).toFixed(2)}%)</p>
             </CDBCardBody>
           </CDBCard>
         </CDBCol>
@@ -86,7 +86,7 @@ const TenantReports = ({ tenants }) => {
         <CDBCol md="6">
           <CDBCard>
             <CDBCardBody>
-              <h5>Gender Distribution</h5>
+              <h5>Tenant Type Distribution</h5>
               <Bar data={barData} options={barOptions} />
             </CDBCardBody>
           </CDBCard>

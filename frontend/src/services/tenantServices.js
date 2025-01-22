@@ -48,9 +48,10 @@ const fetchTenants = async () => {
 const addTenant = async (tenant) => {
     try {
         const response = await axiosInstance.post(TENANT_API_URL, tenant);
-        return response.data;
+        return response;
     } catch (error) {
         console.error("Error adding tenant:", error);
+        return error.response
     }
 }
 

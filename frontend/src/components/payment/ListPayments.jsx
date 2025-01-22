@@ -158,7 +158,9 @@ const PaymentList = ({ payments, setPayments }) => {
       >
         <MenuItem onClick={handleView}>View</MenuItem>
         <MenuItem onClick={handleEdit}>Edit</MenuItem>
-        <MenuItem onClick={handlePaymentConfirm}>Confirm Payment</MenuItem>
+        <MenuItem onClick={handlePaymentConfirm} 
+        disabled={selectedPayment?.status === 'confirmed'}
+        >Confirm Payment</MenuItem>
       </Menu>
       </CDBContainer>
 

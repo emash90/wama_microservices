@@ -19,7 +19,7 @@ const TenantDetails = () => {
     const fetchTenantDetails = async () => {
       try {
         const response = await fetchTenantById(id)
-        setTenant(response);
+        setTenant(response.data[0]);
       } catch (err) {
         console.error('Error fetching tenant details:', err);
         setError('Failed to load tenant details');
@@ -65,7 +65,7 @@ const TenantDetails = () => {
             <strong>Email:</strong> {tenant.tenant_email}
           </Typography>
           <Typography variant="body1">
-            <strong>House Number:</strong> {tenant.houseNumber}
+            <strong>House Number:</strong> {tenant.tenant_house}
           </Typography>
           <Typography variant="body1">
             <strong>Balance:</strong> ${tenant.balance}

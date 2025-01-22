@@ -53,9 +53,11 @@ const getHouseByTenantId = async (tenantId) => {
 const addHouse = async (house) => {
   try {
     const response = await axiosInstance.post(HOUSE_API_URL, house);
-    return response.data;
+    console.log("response", response)
+    return response;
   } catch (error) {
     console.error("Error adding house:", error);
+    return error.response
   }
 };
 
