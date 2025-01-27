@@ -3,7 +3,8 @@ const cors = require('cors')
 require('dotenv').config()
 const connectDB = require('./config/database')
 const tenantRoutes = require('./src/routes/tenantRoutes');
-
+const { listenForPaymentUpdates } = require('./src/services/tenantServices')
+listenForPaymentUpdates()
 
 const app = express()
 

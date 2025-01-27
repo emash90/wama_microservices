@@ -42,6 +42,56 @@ const getTenantsPipeline = (filter = {}) => [
   },
 ];
 
+// Function to listen for payment updates from RabbitMQ
+const listenForPaymentUpdates = async () => {
+  try {
+    // Connect to RabbitMQ
+    await connectRabbitMQ();
+    const channel = getChannel();
+
+    // Assert the queue where payment updates are sent
+    await channel.assertQueue('payment_updates', { durable: true });
+
+    console.log('Listening for payment updates...');
+
+    // Listen for messages on the 'payment_updates' queue
+    channel.consume('payment_updates', async (msg) => {
+      if (msg !== null) {
+        // Parse the message content
+        const paymentData = JSON.parse(msg.content.toString());
+        const { tenantId, amountPaid } = paymentData;
+
+        try {
+          // Find the tenant by ID
+          const tenant = await Tenant.findById(tenantId);
+
+          if (tenant) {
+            // Deduct the payment amount from the tenant's balance
+            tenant.balance -= amountPaid;
+
+            // Save the updated tenant data
+            await tenant.save();
+            console.log(`Tenant balance updated for tenant ID ${tenantId}. New balance: ${tenant.balance}`);
+
+            // Acknowledge the message as processed
+            channel.ack(msg);
+          } else {
+            console.log(`Tenant with ID ${tenantId} not found.`);
+            // Acknowledge the message even if tenant is not found
+            channel.ack(msg);
+          }
+        } catch (error) {
+          console.error('Error processing payment update:', error);
+          // Reject the message and requeue it in case of error
+          channel.nack(msg, false, true);
+        }
+      }
+    });
+  } catch (error) {
+    console.error('Error setting up RabbitMQ listener:', error);
+  }
+};
+
 
 const getAllTenants = async () => {
   const pipeline = getTenantsPipeline();
@@ -128,4 +178,5 @@ module.exports = {
   findTenantByPhoneNumber,
   createTenant,
   updateTenant,
+  listenForPaymentUpdates
 };

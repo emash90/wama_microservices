@@ -1,33 +1,33 @@
+const { connectRabbitMQ, getChannel } = require('../../utils/rabbitmq');
 const Payment = require('../models/paymentModel');
 
 
-// Function to construct the pipeline
 const buildPaymentPipeline = (filter = {}) => {
   const pipeline = [
-    { $match: filter }, // Optional filter stage
+    { $match: filter }, 
     // Lookup tenant details
     {
       $lookup: {
-        from: 'tenants', // Name of the tenants collection
-        localField: 'tenant_id', // Field in Payment that references a Tenant
-        foreignField: '_id', // Field in Tenants that matches the localField
+        from: 'tenants', 
+        localField: 'tenant_id', 
+        foreignField: '_id', 
         as: 'tenantDetails',
       },
     },
     {
-      $unwind: { path: '$tenantDetails', preserveNullAndEmptyArrays: true }, // Flatten tenantDetails array
+      $unwind: { path: '$tenantDetails', preserveNullAndEmptyArrays: true }, 
     },
     // Lookup house details
     {
       $lookup: {
-        from: 'houses', // Name of the houses collection
-        localField: 'house_id', // Field in Payment that references a House
-        foreignField: '_id', // Field in Houses that matches the localField
+        from: 'houses', 
+        localField: 'house_id',
+        foreignField: '_id', 
         as: 'houseDetails',
       },
     },
     {
-      $unwind: { path: '$houseDetails', preserveNullAndEmptyArrays: true }, // Flatten houseDetails array
+      $unwind: { path: '$houseDetails', preserveNullAndEmptyArrays: true }, 
     },
     // Project only necessary fields
     {
@@ -60,6 +60,7 @@ const getPaymentById = async (id) => {
 // }
 
 const createPayment= async (houseData) => {
+  console.log("house data", houseData)
   const newPayment = new Payment(houseData);
   await newPayment.save();
   let filter = {
@@ -71,29 +72,68 @@ const createPayment= async (houseData) => {
 
 const updatePayment = async (id, updateData) => {
   try {
-    // Find and update the payment record
     const updatedPayment = await Payment.findByIdAndUpdate(
       id,
-      { $set: updateData }, // Apply the updates
-      { new: true, runValidators: true } // Return the updated document and validate updates
+      { $set: updateData }, 
+      { new: true, runValidators: true }
     );
 
     if (!updatedPayment) {
       throw new Error(`Payment with ID ${id} not found`);
     }
 
-    // Build a filter to fetch the updated record with details
+    if (updateData.status === 'confirmed' && updatedPayment.status !== 'confirmed') {
+      updatedPayment.status = 'confirmed'; 
+      await updatedPayment.save();
+    }
+
+    const tenantId = updatedPayment.tenant_id;
+
+    // Step 4: Only send RabbitMQ message to tenant service if payment is confirmed
+    if (updateData.status === 'confirmed' && updatedPayment.status == 'confirmed') {
+      const paymentMessage = {
+        tenantId,
+        amountPaid: updatedPayment.amount_paid,
+        newBalance: -updatedPayment.amount_paid,
+        status: 'confirmed',
+      };
+
+      try {
+        // Connect to RabbitMQ and send the message to the tenant service
+        await connectRabbitMQ();
+        const channel = getChannel();
+
+        const message = JSON.stringify(paymentMessage);
+
+        // Ensure the 'tenant_balance_updates' queue exists, then send the message
+        await channel.assertQueue('payment_updates', { durable: true });
+        channel.sendToQueue('payment_updates', Buffer.from(message));
+
+        console.log('Payment update message sent to RabbitMQ to update tenant balance:', message);
+      } catch (rabbitMqError) {
+        console.error('Error sending payment update message to RabbitMQ:', rabbitMqError);
+      }
+    }
+
+    // Step 5: Build a filter to fetch payment details with tenant and house information
     const filter = { _id: updatedPayment._id };
     const pipeline = buildPaymentPipeline(filter);
 
-    // Fetch the updated record with tenant and house details
-    const result = await Payment.aggregate(pipeline);
-    return result.length > 0 ? result[0] : null;
+    // Step 6: Fetch the payment details including tenant and house information
+    const paymentDetails = await Payment.aggregate(pipeline);
+
+    if (paymentDetails.length === 0) {
+      throw new Error('Payment details not found after updating the payment.');
+    }
+
+    // Step 7: Return the updated payment details
+    return { paymentDetails: paymentDetails[0] };
   } catch (error) {
-    console.error(`Error updating payment: ${error.message}`);
+    console.error('Error updating payment:', error);
     throw error;
   }
 };
+
 
 
 module.exports = {
