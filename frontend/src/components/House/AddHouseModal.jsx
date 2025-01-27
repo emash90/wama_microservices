@@ -137,20 +137,6 @@ const AddHouseModal = ({ show, onClose, setHouses }) => {
               {errors.house_type}
             </Form.Control.Feedback>
           </Form.Group>
-          <Form.Group>
-            <Form.Check
-              type="checkbox"
-              label="Occupied"
-              name="occupied"
-              checked={houseData.occupied}
-              onChange={(e) =>
-                setHouseData((prevData) => ({
-                  ...prevData,
-                  occupied: e.target.checked,
-                }))
-              }
-            />
-          </Form.Group>
         </Form>
       </Modal.Body>
       <Modal.Footer>
