@@ -10,7 +10,7 @@ const LoginPage = () => {
             children={{
                 left: (
                     <LeftSection
-                        title="Simplify the Landlord/Landlady Work"
+                        title="Simplify the Rental Property Management"
                         description="Manage your properties, tenants, and payments effortlessly in one platform."
                     />
                 ),
