@@ -11,7 +11,7 @@ const RegisterPage = () => {
             children={{
                 left: (
                     <LeftSection
-                        title="Welcome to Our Platform!!"
+                        title="Welcome to Our Platform!!!!!"
                         description="Join us and explore all the amazing features we have to offer. It's quick, easy, and free to register!"
                     />
                 ),
