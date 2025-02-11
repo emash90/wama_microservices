@@ -26,5 +26,5 @@ app.use((err, req, res, next) => {
 const PORT = process.env.GATEWAY_PORT || 4000;
 
 app.listen(PORT, () => {
-    console.log(`api gateway listening on port ${PORT}!`)
+    console.log(`api gateway listening on port ${PORT}!!!!`)
 })
