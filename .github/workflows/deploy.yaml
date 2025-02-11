@@ -1,0 +1,86 @@
+name: Deploy to Google Cloud Run
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "frontend/**"
+      - "backend/**"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    steps:
+      # 1. Checkout the repository
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # 2. Authenticate with Google Cloud using the service account
+      - name: Authenticate with Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      # 3. Set up Google Cloud SDK
+      - name: Setup Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: wama-microservices
+
+      # 4. Log in to Google Container Registry (GCR)
+      - name: Authenticate with Google Container Registry
+        run: gcloud auth configure-docker gcr.io
+
+      # 5. Determine which service changed
+      - name: Detect changed service
+        id: changed-service
+        run: |
+          echo "Detecting changes..."
+          CHANGED_SERVICE=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep backend/ | cut -d'/' -f2 | uniq)
+          echo "Service changed: $CHANGED_SERVICE"
+          echo "service=$CHANGED_SERVICE" >> $GITHUB_ENV
+
+      # 6. Build and push the Docker image only if a service changed
+      - name: Build and Push Docker Image
+        if: env.service != ''
+        run: |
+          SERVICE_NAME=${{ env.service }}
+          IMAGE_NAME=gcr.io/wama-microservices/$SERVICE_NAME
+          IMAGE_TAG=$(date +%Y%m%d%H%M%S)
+
+          echo "Building Docker image for $SERVICE_NAME..."
+          docker build -t $IMAGE_NAME:$IMAGE_TAG ./backend/$SERVICE_NAME
+          docker push $IMAGE_NAME:$IMAGE_TAG
+
+          echo "Deploying $SERVICE_NAME to Cloud Run..."
+          gcloud run deploy $SERVICE_NAME \
+            --image $IMAGE_NAME:$IMAGE_TAG \
+            --platform managed \
+            --region us-central1 \
+            --allow-unauthenticated \
+            --port 3000
+
+      # 7. Deploy the frontend if changes detected
+      - name: Build and Deploy Frontend
+        if: contains(github.event.head_commit.modified, 'frontend/')
+        run: |
+          IMAGE_NAME=gcr.io/wama-microservices/frontend
+          IMAGE_TAG=$(date +%Y%m%d%H%M%S)
+
+          echo "Building and pushing frontend image..."
+          docker build -t $IMAGE_NAME:$IMAGE_TAG ./frontend
+          docker push $IMAGE_NAME:$IMAGE_TAG
+
+          echo "Deploying frontend to Cloud Run..."
+          gcloud run deploy frontend \
+            --image $IMAGE_NAME:$IMAGE_TAG \
+            --platform managed \
+            --region us-central1 \
+            --allow-unauthenticated \
+            --port 80
