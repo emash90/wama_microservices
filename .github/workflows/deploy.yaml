@@ -66,6 +66,16 @@ jobs:
             echo "Building and pushing image for $SERVICE..."
             docker build -t $IMAGE_NAME:$IMAGE_TAG ./backend/$SERVICE
             docker push $IMAGE_NAME:$IMAGE_TAG
+            
+            # Define the correct port for each service
+            case $SERVICE in
+              api-gateway) PORT=4000 ;;
+              house) PORT=4002 ;;
+              tenant) PORT=4001 ;;
+              user) PORT=4004 ;;
+              payment) PORT=4003 ;;
+              *) PORT=3000 ;;  # Default port (fallback)
+            esac
 
             echo "Deploying $SERVICE to Cloud Run..."
             gcloud run deploy $SERVICE \
