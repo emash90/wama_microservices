@@ -21,7 +21,7 @@ connectDB()
 const PORT = process.env.TENANTPORT || 4001
 
 app.listen((PORT), () => {
-    console.log(`tenant service running on port ${PORT}`)
+    console.log(`tenant service running on port ${PORT}!!!`)
 })
 
 app.use(tenantRoutes)

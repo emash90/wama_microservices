@@ -24,6 +24,6 @@ app.use(paymentRoutes)
 connectDB()
 
 app.listen((PORT), () => {
-    console.log(`payment service running on port ${PORT}`)
+    console.log(`payment service running on port ${PORT}!!!!`)
 } )
 
