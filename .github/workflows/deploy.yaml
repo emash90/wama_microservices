@@ -44,7 +44,7 @@ jobs:
         id: changed-services
         run: |
           echo "Detecting changed backend services..."
-          CHANGED_SERVICES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -E 'backend/(houses|tenants|payments|users)/' | cut -d'/' -f2 | sort -u)
+          CHANGED_SERVICES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -E 'backend/(house|tenant|payment|user|api-gateway)/' | cut -d'/' -f2 | sort -u)
           
           if [ -z "$CHANGED_SERVICES" ]; then
             echo "No backend changes detected."
