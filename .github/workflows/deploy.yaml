@@ -87,12 +87,14 @@ jobs:
       - name: Build and Deploy Frontend
         if: env.FRONTEND_CHANGED == 'true'
         run: |
-          IMAGE_NAME=IMAGE_NAME=wama-microservices/frontend/wama-frontend
+          IMAGE_NAME="wama-microservices/frontend/wama-frontend"
           IMAGE_TAG=$(date +%Y%m%d%H%M%S)
 
-          echo "Building and pushing frontend image..."
-          docker build -t $IMAGE_NAME:$IMAGE_TAG ./frontend
-          docker push $IMAGE_NAME:$IMAGE_TAG
+          echo "Building Docker image: $IMAGE_NAME:$IMAGE_TAG"
+
+          docker build -t "$IMAGE_NAME:$IMAGE_TAG" .
+          docker push "$IMAGE_NAME:$IMAGE_TAG"
+
 
           echo "Deploying frontend to Cloud Run..."
           gcloud run deploy frontend \
