@@ -72,6 +72,9 @@ const LoginForm = ({ loginUser }) => {
       <p className="text-center mt-3">
         Don't have an account? <Link to="/register">Register</Link>
       </p>
+      <p className="text-center mt-3">
+        <Link to="/reset_password">forgot password</Link>
+      </p>
     </Form>
   );
 };
