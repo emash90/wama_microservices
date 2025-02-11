@@ -21,7 +21,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # 2. Authenticate with Google Cloud using the service account
+      # 2. Authenticate with Google Cloud
       - name: Authenticate with Google Cloud
         uses: google-github-actions/auth@v2
         with:
@@ -33,42 +33,57 @@ jobs:
         with:
           project_id: wama-microservices
 
-      # 4. Log in to Google Container Registry (GCR)
+      # 4. Authenticate with Google Container Registry
       - name: Authenticate with Google Container Registry
         run: gcloud auth configure-docker gcr.io
 
-      # 5. Determine which service changed
-      - name: Detect changed service
-        id: changed-service
+      # 5. Detect changed backend services
+      - name: Detect changed backend services
+        id: changed-services
         run: |
-          echo "Detecting changes..."
-          CHANGED_SERVICE=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep backend/ | cut -d'/' -f2 | uniq)
-          echo "Service changed: $CHANGED_SERVICE"
-          echo "service=$CHANGED_SERVICE" >> $GITHUB_ENV
+          echo "Detecting changed backend services..."
+          CHANGED_SERVICES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -E 'backend/(houses|tenants|payments|users)/' | cut -d'/' -f2 | sort -u)
+          
+          if [ -z "$CHANGED_SERVICES" ]; then
+            echo "No backend changes detected."
+            echo "BACKEND_CHANGED=false" >> $GITHUB_ENV
+          else
+            echo "Changed backend services: $CHANGED_SERVICES"
+            echo "BACKEND_CHANGED=true" >> $GITHUB_ENV
+            echo "CHANGED_SERVICES=$CHANGED_SERVICES" >> $GITHUB_ENV
+          fi
 
-      # 6. Build and push the Docker image only if a service changed
-      - name: Build and Push Docker Image
-        if: env.service != ''
+      # 6. Deploy changed backend services
+      - name: Build and Deploy Backend Services
+        if: env.BACKEND_CHANGED == 'true'
         run: |
-          SERVICE_NAME=${{ env.service }}
-          IMAGE_NAME=gcr.io/wama-microservices/$SERVICE_NAME
-          IMAGE_TAG=$(date +%Y%m%d%H%M%S)
+          for SERVICE in $CHANGED_SERVICES; do
+            IMAGE_NAME=gcr.io/wama-microservices/$SERVICE
+            IMAGE_TAG=$(date +%Y%m%d%H%M%S)
 
-          echo "Building Docker image for $SERVICE_NAME..."
-          docker build -t $IMAGE_NAME:$IMAGE_TAG ./backend/$SERVICE_NAME
-          docker push $IMAGE_NAME:$IMAGE_TAG
+            echo "Building and pushing image for $SERVICE..."
+            docker build -t $IMAGE_NAME:$IMAGE_TAG ./backend/$SERVICE
+            docker push $IMAGE_NAME:$IMAGE_TAG
 
-          echo "Deploying $SERVICE_NAME to Cloud Run..."
-          gcloud run deploy $SERVICE_NAME \
-            --image $IMAGE_NAME:$IMAGE_TAG \
-            --platform managed \
-            --region us-central1 \
-            --allow-unauthenticated \
-            --port 3000
+            echo "Deploying $SERVICE to Cloud Run..."
+            gcloud run deploy $SERVICE \
+              --image $IMAGE_NAME:$IMAGE_TAG \
+              --platform managed \
+              --region us-central1 \
+              --allow-unauthenticated \
+              --port 3000
+          done
 
-      # 7. Deploy the frontend if changes detected
+      # 7. Detect if frontend changed
+      - name: Detect frontend changes
+        id: frontend-changes
+        run: |
+          FRONTEND_CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q 'frontend/' && echo "true" || echo "false")
+          echo "FRONTEND_CHANGED=$FRONTEND_CHANGED" >> $GITHUB_ENV
+
+      # 8. Build and Deploy Frontend if changed
       - name: Build and Deploy Frontend
-        if: contains(github.event.head_commit.modified, 'frontend/')
+        if: env.FRONTEND_CHANGED == 'true'
         run: |
           IMAGE_NAME=gcr.io/wama-microservices/frontend
           IMAGE_TAG=$(date +%Y%m%d%H%M%S)
@@ -83,4 +98,4 @@ jobs:
             --platform managed \
             --region us-central1 \
             --allow-unauthenticated \
-            --port 80
+            --port 5173
