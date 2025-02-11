@@ -10,8 +10,17 @@ import {
   CDBLink,
   CDBCollapse,
 } from 'cdbreact';
+import { useNavigate } from 'react-router-dom';
 
 const SideNav = ({ onToggle }) => {
+  const navigate = useNavigate()
+  const handleLogout = () => {
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('user');
+    navigate('/login');
+    // TODO: Add logout functionalities
+  };
+
   return (
     <CDBSidebar textColor="#fff" backgroundColor="#333" untoggled>
       <CDBSidebarHeader prefix={<CDBIcon icon="bars" size="lg" />} onClick={onToggle}>
@@ -36,9 +45,9 @@ const SideNav = ({ onToggle }) => {
           </CDBLink>
         </CDBSidebarMenu>
         <CDBSidebarMenu>
-          <CDBLink to="/logout" className="d-flex align-items-center">
+          <button onClick={handleLogout} className="d-flex align-items-center btn" style={{color: 'white'}}>
             <CDBSidebarMenuItem icon="sign-out-alt">Logout</CDBSidebarMenuItem>
-          </CDBLink>
+          </button>
         </CDBSidebarMenu>
       </CDBSidebarContent>
 
