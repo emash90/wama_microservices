@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -13,18 +13,26 @@ import {
 } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
 
+interface House {
+  _id: string;
+  house_number: string;
+  house_price: number;
+}
+
 interface Tenant {
-  name: string;
-  email: string;
-  phone: string;
-  house_assigned: string;
+  tenant_first_name: string;
+  tenant_last_name: string;
+  tenant_email: string;
+  tenant_phone: string;
+  tenant_house_id: string;
+  tenant_rent: number;
 }
 
 interface AddTenantModalProps {
   open: boolean;
   onClose: () => void;
   setTenants: React.Dispatch<React.SetStateAction<Tenant[]>>;
-  houses: string[]; // Array of available house numbers
+  houses: House[];
 }
 
 const AddTenantModal: React.FC<AddTenantModalProps> = ({ open, onClose, setTenants, houses }) => {
@@ -32,20 +40,31 @@ const AddTenantModal: React.FC<AddTenantModalProps> = ({ open, onClose, setTenan
     control,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors, isValid },
   } = useForm<Tenant>({
     mode: "onBlur",
     defaultValues: {
-      name: "",
-      email: "",
-      phone: "",
-      house_assigned: "",
+      tenant_first_name: "",
+      tenant_last_name: "",
+      tenant_email: "",
+      tenant_phone: "",
+      tenant_house_id: "",
+      tenant_rent: 0,
     },
   });
 
   useEffect(() => {
     if (!open) reset();
   }, [open, reset]);
+
+  const handleHouseSelection = (houseId: string) => {
+    const selectedHouse = houses.find((house) => house._id === houseId);
+    if (selectedHouse) {
+      setValue("tenant_house_id", selectedHouse._id);
+      setValue("tenant_rent", selectedHouse.house_price);
+    }
+  };
 
   const onSubmit = (data: Tenant) => {
     if (!isValid) return;
@@ -66,61 +85,7 @@ const AddTenantModal: React.FC<AddTenantModalProps> = ({ open, onClose, setTenan
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <Controller
-                name="name"
-                control={control}
-                rules={{ required: "Tenant name is required" }}
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    label="Name"
-                    fullWidth
-                    margin="dense"
-                    error={!!errors.name}
-                    helperText={errors.name?.message}
-                    required
-                  />
-                )}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <Controller
-                name="email"
-                control={control}
-                rules={{ required: "Email is required", pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: "Invalid email format" } }}
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    label="Email"
-                    fullWidth
-                    margin="dense"
-                    error={!!errors.email}
-                    helperText={errors.email?.message}
-                    required
-                  />
-                )}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <Controller
-                name="phone"
-                control={control}
-                rules={{ required: "Phone number is required", pattern: { value: /^\d{10}$/, message: "Invalid phone number" } }}
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    label="Phone Number"
-                    fullWidth
-                    margin="dense"
-                    error={!!errors.phone}
-                    helperText={errors.phone?.message}
-                    required
-                  />
-                )}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <Controller
-                name="house_assigned"
+                name="tenant_house_id"
                 control={control}
                 rules={{ required: "Please assign a house" }}
                 render={({ field }) => (
@@ -130,16 +95,101 @@ const AddTenantModal: React.FC<AddTenantModalProps> = ({ open, onClose, setTenan
                     label="Assign House"
                     fullWidth
                     margin="dense"
-                    error={!!errors.house_assigned}
-                    helperText={errors.house_assigned?.message}
+                    error={!!errors.tenant_house_id}
+                    helperText={errors.tenant_house_id?.message}
                     required
+                    onChange={(e) => handleHouseSelection(e.target.value)}
                   >
                     {houses.map((house) => (
-                      <MenuItem key={house} value={house}>
-                        {house}
+                      <MenuItem key={house._id} value={house._id}>
+                        {house.house_number}
                       </MenuItem>
                     ))}
                   </TextField>
+                )}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Controller
+                name="tenant_rent"
+                control={control}
+                render={({ field }) => (
+                  <TextField {...field} label="Rent Amount" fullWidth margin="dense" disabled />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Controller
+                name="tenant_first_name"
+                control={control}
+                rules={{ required: "First name is required" }}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    label="First Name"
+                    fullWidth
+                    margin="dense"
+                    error={!!errors.tenant_first_name}
+                    helperText={errors.tenant_first_name?.message}
+                    required
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Controller
+                name="tenant_last_name"
+                control={control}
+                rules={{ required: "Last name is required" }}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    label="Last Name"
+                    fullWidth
+                    margin="dense"
+                    error={!!errors.tenant_last_name}
+                    helperText={errors.tenant_last_name?.message}
+                    required
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Controller
+                name="tenant_email"
+                control={control}
+                rules={{
+                  required: "Email is required",
+                  pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: "Invalid email format" },
+                }}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    label="Email"
+                    fullWidth
+                    margin="dense"
+                    error={!!errors.tenant_email}
+                    helperText={errors.tenant_email?.message}
+                    required
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Controller
+                name="tenant_phone"
+                control={control}
+                rules={{ required: "Phone number is required", pattern: { value: /^\d{10}$/, message: "Invalid phone number" } }}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    label="Phone Number"
+                    fullWidth
+                    margin="dense"
+                    error={!!errors.tenant_phone}
+                    helperText={errors.tenant_phone?.message}
+                    required
+                  />
                 )}
               />
             </Grid>

@@ -1,46 +1,49 @@
-import React from 'react';
-import { Box, Typography, Button } from '@mui/material';
-import Link  from 'next/link';
+import React from "react";
+import {
+  Box,
+  Typography,
+  Button,
+  Stack,
+  TextField,
+} from "@mui/material";
+import Link from "next/link";
 
-import CustomTextField from '@/app/(DashboardLayout)/components/forms/theme-elements/CustomTextField';
-import { Stack } from '@mui/system';
+interface RegisterProps {
+  title?: string;
+  subtitle?: JSX.Element | JSX.Element[];
+  subtext?: JSX.Element | JSX.Element[];
+}
 
-interface registerType {
-    title?: string;
-    subtitle?: JSX.Element | JSX.Element[];
-    subtext?: JSX.Element | JSX.Element[];
-  }
+const AuthRegister = ({ title, subtitle, subtext }: RegisterProps) => (
+  <Box sx={{ maxWidth: 400, mx: "auto", p: 3, boxShadow: 3, borderRadius: 2, bgcolor: "background.paper" }}>
+    {title && (
+      <Typography fontWeight={700} variant="h4" mb={2} textAlign="center">
+        {title}
+      </Typography>
+    )}
 
-const AuthRegister = ({ title, subtitle, subtext }: registerType) => (
-    <>
-        {title ? (
-            <Typography fontWeight="700" variant="h2" mb={1}>
-                {title}
-            </Typography>
-        ) : null}
+    {subtext && <Box mb={2}>{subtext}</Box>}
 
-        {subtext}
+    <Stack spacing={2}>
+      <TextField label="First Name" variant="outlined" fullWidth />
+      <TextField label="Last Name" variant="outlined" fullWidth />
+      <TextField label="Email Address" variant="outlined" fullWidth type="email" />
+      <TextField label="Password" variant="outlined" fullWidth type="password" />
+    </Stack>
 
-        <Box>
-            <Stack mb={3}>
-                <Typography variant="subtitle1"
-                    fontWeight={600} component="label" htmlFor='name' mb="5px">Name</Typography>
-                <CustomTextField id="name" variant="outlined" fullWidth />
-
-                <Typography variant="subtitle1"
-                    fontWeight={600} component="label" htmlFor='email' mb="5px" mt="25px">Email Address</Typography>
-                <CustomTextField id="email" variant="outlined" fullWidth />
-
-                <Typography variant="subtitle1"
-                    fontWeight={600} component="label" htmlFor='password' mb="5px" mt="25px">Password</Typography>
-                <CustomTextField id="password" variant="outlined" fullWidth />
-            </Stack>
-            <Button color="primary" variant="contained" size="large" fullWidth component={Link} href="/authentication/login">
-                Sign Up
-            </Button>
-        </Box>
-        {subtitle}
-    </>
+    <Button
+      color="primary"
+      variant="contained"
+      size="large"
+      fullWidth
+      sx={{ mt: 3 }}
+      component={Link}
+      href="/authentication/login"
+    >
+      Sign Up
+    </Button>
+    {subtitle && <Box mt={2}>{subtitle}</Box>}
+  </Box>
 );
 
 export default AuthRegister;

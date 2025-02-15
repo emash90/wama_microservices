@@ -23,7 +23,7 @@ const Login2 = () => {
       const response = await loginUser({ email, password });
       if (response.status === 200) {
         localStorage.setItem("token", response.data.token);
-        router.push("/dashboard"); // Redirect to dashboard
+        router.push("/");
       } else {
         setError(response.data.message || "Login failed. Please try again.");
       }
