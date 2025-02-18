@@ -38,7 +38,7 @@ interface House {
 const fetchHouses = async (): Promise<House[]> => {
   try {
     const response: AxiosResponse<House[]> = await axiosInstance.get(HOUSE_API_URL);
-    console.log("house data ==> ", response)
+    console.log("house data to test next frontend deployment ==> ", response)
     return response.data;
   } catch (error) {
     console.error("Error fetching houses:", error);
