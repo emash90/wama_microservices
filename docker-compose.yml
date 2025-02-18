@@ -104,12 +104,12 @@ services:
 
   frontend:
     build:
-      context: ./frontend
+      context: ./next-frontend
     volumes:
-      - ./frontend:/app
+      - ./next-frontend:/app
       - /app/node_modules
     ports:
-      - "5173:5173"
+      - "3000:3000"
     depends_on:
       - api-gateway
     env_file:
