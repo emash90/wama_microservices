@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - "frontend/**"
+      - "next-frontend/**"
       - "backend/**"
 
 jobs:
@@ -90,18 +90,18 @@ jobs:
       - name: Detect frontend changes
         id: frontend-changes
         run: |
-          FRONTEND_CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q 'frontend/' && echo "true" || echo "false")
+          FRONTEND_CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q 'next-frontend/' && echo "true" || echo "false")
           echo "FRONTEND_CHANGED=$FRONTEND_CHANGED" >> $GITHUB_ENV
 
       # 8. Build and Deploy Frontend if changed
       - name: Build and Deploy Frontend
         if: env.FRONTEND_CHANGED == 'true'
         run: |
-          IMAGE_NAME=gcr.io/wama-microservices/frontend
+          IMAGE_NAME=gcr.io/wama-microservices/next-frontend
           IMAGE_TAG=$(date +%Y%m%d%H%M%S)
 
           echo "Building and pushing frontend image..."
-          docker build -t $IMAGE_NAME:$IMAGE_TAG ./frontend
+          docker build -t $IMAGE_NAME:$IMAGE_TAG ./next-frontend
           docker push $IMAGE_NAME:$IMAGE_TAG
 
           echo "Deploying frontend to Cloud Run..."
