@@ -13,6 +13,7 @@ import {
   MenuItem,
   InputLabel,
   FormControl,
+  SelectChangeEvent
 } from "@mui/material";
 
 interface Tenant {
@@ -62,9 +63,9 @@ const AddPaymentModal: React.FC<AddPaymentModalProps> = ({ open, onClose, tenant
     }
   }, [formData.tenant_id, tenants]);
 
-  const handleChange = (e: React.ChangeEvent<{ name?: string; value: unknown }>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name as string]: value }));
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent<string>) => {
+    const { name, value } = e.target as HTMLInputElement | { name: string; value: string };
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleFullPaymentChange = () => {

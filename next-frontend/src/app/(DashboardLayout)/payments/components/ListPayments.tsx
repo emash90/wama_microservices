@@ -18,18 +18,26 @@ import AddPaymentModal from "./AddPaymentModal";
 import EditPaymentModal from "./EditPaymentModal";
 
 interface Payment {
-  _id: string;
-  tenant_name: string;
-  tenant_house_number: string;
-  amount_paid: number;
-  date_paid: string;
-  payment_mode: string;
-  balance: number;
-}
+    _id: string;
+    tenant_id: string;
+    house_id: string;
+    amount_due: number;
+    amount_paid: number;
+    balance: number;
+    date_paid: string;
+    full_payment: boolean;
+    payment_mode: string;
+    month: string;
+    status: string;
+    createdAt: string;
+    updatedAt: string;
+    __v: number;
+  }
 
 interface ListPaymentsProps {
   payments: Payment[];
   setPayments: React.Dispatch<React.SetStateAction<Payment[]>>;
+  tenants: any[]; 
 }
 
 const ListPayments: React.FC<ListPaymentsProps> = ({ payments, setPayments, tenants }) => {
@@ -138,8 +146,8 @@ const ListPayments: React.FC<ListPaymentsProps> = ({ payments, setPayments, tena
           getRowId={(row) => row._id}
         />
       </div>
-      <AddPaymentModal open={showAddModal} onClose={() => setShowAddModal(false)} setPayments={setPayments} tenants={tenants} />
-      <EditPaymentModal open={showEditModal} onClose={() => setShowEditModal(false)} payment={selectedPayment} setPayments={setPayments} />
+      {/* <AddPaymentModal open={showAddModal} onClose={() => setShowAddModal(false)} setPayments={setPayments} tenants={tenants} />
+      <EditPaymentModal open={showEditModal} onClose={() => setShowEditModal(false)} payment={selectedPayment} setPayments={setPayments} /> */}
     </Container>
   );
 };

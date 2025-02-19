@@ -16,12 +16,20 @@ import {
 
 import { uniqueId } from "lodash";
 
-const Menuitems = [
+interface MenuItem {
+  id?: string;
+  title?: string;
+  icon?: React.ElementType;
+  href?: string;
+  navlabel?: boolean;
+  subheader?: string;
+}
+
+const Menuitems: MenuItem[] = [
   {
     navlabel: true,
     subheader: "Home",
   },
-
   {
     id: uniqueId(),
     title: "Dashboard",
@@ -69,3 +77,5 @@ const Menuitems = [
 ];
 
 export default Menuitems;
+
+

@@ -6,9 +6,35 @@ import PageContainer from "@/app/(DashboardLayout)/components/container/PageCont
 import DashboardCard from "@/app/(DashboardLayout)/components/shared/DashboardCard";
 import ListTenants from "@/app/(DashboardLayout)/tenants/components/ListTenants";
 
+
+interface Tenant {
+  _id: string,
+  tenant_first_name: string,
+  tenant_last_name: string,
+  tenant_phone: string,
+  tenant_house_id: string,
+  tenant_email: string,
+  tenant_rent: number,
+  active: boolean,
+  balance: number,
+  createdAt: string,
+  updatedAt: string,
+}
+
+interface VacantHouse {
+  _id: string,
+  house_number: string,
+  house_type: number,
+  house_location: string,
+  house_price: number,
+  occupied: boolean,
+  createdAt: string,
+  updatedAt: string,
+}
+
 const Tenant: React.FC = () => {
-  const [tenants, setTenants] = useState([]);
-  const [vacantHouses, setvacantHouses] = useState([]);
+  const [tenants, setTenants] = useState<Tenant[]>([]);
+  const [vacantHouses, setvacantHouses] = useState<VacantHouse[]>([]);
 
   const dummyTenantData = [
     {
@@ -23,7 +49,6 @@ const Tenant: React.FC = () => {
       balance: 89980,
       createdAt: "2025-02-10T15:41:29.102+00:00",
       updatedAt: "2025-02-10T15:44:02.501+00:00",
-      __v: 0,
     },
     {
       _id: "67aa1e291df76c3e24296441",
@@ -37,7 +62,6 @@ const Tenant: React.FC = () => {
       balance: 45000,
       createdAt: "2025-02-11T09:30:10.500+00:00",
       updatedAt: "2025-02-11T10:45:22.200+00:00",
-      __v: 0,
     },
     {
       _id: "67aa1e291df76c3e24296442",
@@ -51,7 +75,6 @@ const Tenant: React.FC = () => {
       balance: 120000,
       createdAt: "2025-02-12T08:20:15.750+00:00",
       updatedAt: "2025-02-12T09:10:30.800+00:00",
-      __v: 0,
     },
   ];
 
@@ -65,7 +88,6 @@ const Tenant: React.FC = () => {
       occupied: false,
       createdAt: "2025-02-10T15:40:11.731+00:00",
       updatedAt: "2025-02-10T15:41:29.736+00:00",
-      __v: 0,
     },
     {
       _id: "67aa1ddb8ea32554177b27a3",
@@ -76,7 +98,6 @@ const Tenant: React.FC = () => {
       occupied: false,
       createdAt: "2025-02-10T16:00:00.000+00:00",
       updatedAt: "2025-02-10T16:05:00.000+00:00",
-      __v: 0,
     },
     {
       _id: "67aa1ddb8ea32554177b27a4",
@@ -87,7 +108,6 @@ const Tenant: React.FC = () => {
       occupied: false,
       createdAt: "2025-02-11T10:15:30.500+00:00",
       updatedAt: "2025-02-11T11:20:40.600+00:00",
-      __v: 0,
     },
   ];
 

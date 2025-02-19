@@ -105,6 +105,7 @@ services:
   frontend:
     build:
       context: ./next-frontend
+      dockerfile: Dockerfile.dev
     volumes:
       - ./next-frontend:/app
       - /app/node_modules

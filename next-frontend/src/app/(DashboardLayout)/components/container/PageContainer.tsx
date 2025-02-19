@@ -1,19 +1,19 @@
 "use client";
-import { Helmet, HelmetProvider } from 'react-helmet-async';
-
+import { ReactNode } from "react";
+import { Helmet, HelmetProvider } from "react-helmet-async";
 
 type Props = {
   description?: string;
-  children: JSX.Element | JSX.Element[];
+  children: ReactNode;
   title?: string;
 };
 
-const PageContainer = ({ title, description, children }: Props) => (
+const PageContainer = ({ title, description = "", children }: Props) => (
   <HelmetProvider>
     <div>
       <Helmet>
-        <title>{title}</title>
-        <meta name="description" content={description} />
+        {title && <title>{title}</title>}
+        {description && <meta name="description" content={description} />}
       </Helmet>
       {children}
     </div>

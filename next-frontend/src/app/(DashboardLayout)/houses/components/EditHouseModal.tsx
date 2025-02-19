@@ -3,6 +3,7 @@ import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, M
 import { useForm, Controller } from "react-hook-form";
 
 interface House {
+  _id: string;
   house_number: string;
   house_location: string;
   house_price: number;

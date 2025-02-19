@@ -1,106 +1,104 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
-import { Grid, Box, Card, Stack, Typography, TextField, Button, Alert } from "@mui/material";
+import { Grid, Box, Card, Stack, Typography, TextField, Button, Alert, CircularProgress } from "@mui/material";
 import PageContainer from "@/app/(DashboardLayout)/components/container/PageContainer";
 import Logo from "@/app/(DashboardLayout)/layout/shared/logo/Logo";
 import { loginUser } from "@/services/authService";
 import { useRouter } from "next/navigation";
 
+export const dynamic = "force-dynamic";
+
 const Login2 = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [user, setUser] = useState({ email: "", password: "" });
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
 
-  const handleLogin = async (e) => {
+  // Handle input changes
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setUser((prevUser) => ({ ...prevUser, [name]: value }));
+  };
+
+  // Validate form before submitting
+  const validateForm = () => {
+    if (!user.email || !user.password) {
+      setError("All fields are required.");
+      return false;
+    }
+    if (!/\S+@\S+\.\S+/.test(user.email)) {
+      setError("Invalid email format.");
+      return false;
+    }
+    return true;
+  };
+
+  // Handle form submission
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setError("");
+    setError(null);
+
+    if (!validateForm()) return;
+
     setLoading(true);
-    
     try {
-      const response = await loginUser({ email, password });
-      if (response.status === 200) {
-        localStorage.setItem("token", response.data.token);
+      const response = await loginUser(user);
+      if (response?.status === 200 && response.data?.token) {
+        if (typeof window !== "undefined") {
+          localStorage.setItem("token", response.data.token);
+        }
         router.push("/");
       } else {
-        setError(response.data.message || "Login failed. Please try again.");
+        setError(response.data?.message || "Login failed. Please try again.");
       }
     } catch (err) {
-      setError("An error occurred while logging in. Please try again.");
+      setError("An error occurred while logging in. Please check your connection and try again.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <PageContainer title="Login" description="this is Login page">
-      <Box
-        sx={{
-          position: "relative",
-          "&:before": {
-            content: '""',
-            background: "radial-gradient(#d2f1df, #d3d7fa, #bad8f4)",
-            backgroundSize: "400% 400%",
-            animation: "gradient 15s ease infinite",
-            position: "absolute",
-            height: "100%",
-            width: "100%",
-            opacity: "0.3",
-          },
-        }}
-      >
-        <Grid container spacing={0} justifyContent="center" sx={{ height: "100vh" }}>
-          <Grid item xs={12} sm={12} lg={4} xl={3} display="flex" justifyContent="center" alignItems="center">
-            <Card elevation={9} sx={{ p: 4, zIndex: 1, width: "100%", maxWidth: "500px" }}>
-              <Box display="flex" alignItems="center" justifyContent="center">
-                <Logo />
-              </Box>
-              <Typography variant="subtitle1" textAlign="center" color="textSecondary" mb={2}>
-                Login
-              </Typography>
-              {error && <Alert severity="error">{error}</Alert>}
-              <form onSubmit={handleLogin}>
-                <TextField
-                  fullWidth
-                  margin="normal"
-                  label="Email"
-                  variant="outlined"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-                <TextField
-                  fullWidth
-                  margin="normal"
-                  label="Password"
-                  type="password"
-                  variant="outlined"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-                <Button fullWidth variant="contained" color="primary" type="submit" disabled={loading}>
-                  {loading ? "Logging in..." : "Login"}
-                </Button>
-              </form>
-              <Stack direction="row" spacing={1} justifyContent="center" mt={3}>
-                <Typography color="textSecondary" variant="h6" fontWeight="500">
-                  No Account?
-                </Typography>
-                <Typography
-                  component={Link}
-                  href="/authentication/register"
-                  fontWeight="500"
-                  sx={{ textDecoration: "none", color: "primary.main" }}
-                >
-                  Sign Up
-                </Typography>
-              </Stack>
-            </Card>
-          </Grid>
-        </Grid>
+    <PageContainer title="Login" description="This is the Login page">
+      <Box sx={{ position: "relative", height: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <Card elevation={9} sx={{ p: 4, zIndex: 1, width: "100%", maxWidth: "400px" }}>
+          {/* Logo */}
+          <Box display="flex" alignItems="center" justifyContent="center" mb={2}>
+            <Logo />
+          </Box>
+
+          <Typography variant="h5" textAlign="center" fontWeight="600" mb={2}>
+            Login
+          </Typography>
+
+          {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+
+          <form onSubmit={handleLogin}>
+            <TextField fullWidth margin="normal" label="Email" variant="outlined" name="email" type="email" value={user.email} onChange={handleChange} required />
+            <TextField fullWidth margin="normal" label="Password" type="password" variant="outlined" name="password" value={user.password} onChange={handleChange} required />
+
+            <Button 
+              fullWidth 
+              variant="contained" 
+              color="primary" 
+              type="submit" 
+              disabled={loading} 
+              sx={{ mt: 2 }}
+              startIcon={loading && <CircularProgress size={20} color="inherit" />}>
+              {loading ? "Logging in..." : "Login"}
+            </Button>
+          </form>
+
+          <Stack direction="row" spacing={1} justifyContent="center" mt={3}>
+            <Typography color="textSecondary" variant="body2">
+              No account?
+            </Typography>
+            <Typography component={Link} href="/authentication/register" fontWeight="500" sx={{ textDecoration: "none", color: "primary.main" }}>
+              Sign Up
+            </Typography>
+          </Stack>
+        </Card>
       </Box>
     </PageContainer>
   );

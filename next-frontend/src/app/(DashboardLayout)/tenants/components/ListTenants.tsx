@@ -19,18 +19,34 @@ import AddTenantModal from "@/app/(DashboardLayout)/tenants/components/AddTenant
 import EditTenantModal from "@/app/(DashboardLayout)/tenants/components/EditTenantModal";
 
 interface Tenant {
-  _id: string;
-  name: string;
-  phone: string;
-  email: string;
-  house_number: string;
-  lease_start: string;
-  lease_end: string;
+  _id: string,
+  tenant_first_name: string,
+  tenant_last_name: string,
+  tenant_phone: string,
+  tenant_house_id: string,
+  tenant_email: string,
+  tenant_rent: number,
+  active: boolean,
+  balance: number,
+  createdAt: string,
+  updatedAt: string,
+}
+
+
+interface VacantHouse {
+  _id: string,
+  house_number: string,
+  house_type: number,
+  house_location: string,
+  house_price: number,
+  occupied: boolean,
+  createdAt: string,
+  updatedAt: string,
 }
 
 interface ListTenantsProps {
   tenants: Tenant[];
-  vacantHouses: vacantHouses[];
+  vacantHouses: VacantHouse[];
   setTenants: React.Dispatch<React.SetStateAction<Tenant[]>>;
 }
 

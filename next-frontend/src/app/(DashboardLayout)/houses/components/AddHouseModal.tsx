@@ -14,6 +14,7 @@ import {
 import { useForm, Controller } from "react-hook-form";
 
 interface House {
+  _id: string;
   house_number: string;
   house_location: string;
   house_price: number;
@@ -53,7 +54,7 @@ const AddHouseModal: React.FC<AddHouseModalProps> = ({ open, onClose, setHouses 
 
   const onSubmit = (data: House) => {
     if (!isValid) return;
-    setHouses((prevHouses) => [...prevHouses, { ...data, house_type: Number(data.house_type), occupied: false }]);
+    setHouses((prevHouses) => [...prevHouses, { ...data, house_type: Number(data.house_type), occupied: false, _id: crypto.randomUUID() }]);
     reset();
     onClose();
   };

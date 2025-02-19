@@ -35,9 +35,9 @@ jobs:
         with:
           project_id: wama-microservices
 
-      # 4. Authenticate with Google Container Registry
-      - name: Authenticate with Google Container Registry
-        run: gcloud auth configure-docker gcr.io
+      # 4. Authenticate with Google Artifact Registry
+      - name: Authenticate with Google Artifact Registry
+        run: gcloud auth configure-docker us-central1-docker.pkg.dev
 
       # 5. Detect changed backend services
       - name: Detect changed backend services
@@ -60,7 +60,7 @@ jobs:
         if: env.BACKEND_CHANGED == 'true'
         run: |
           for SERVICE in $CHANGED_SERVICES; do
-            IMAGE_NAME=gcr.io/wama-microservices/$SERVICE
+            IMAGE_NAME=us-central1-docker.pkg.dev/wama-microservices/artifact-repo/$SERVICE
             IMAGE_TAG=$(date +%Y%m%d%H%M%S)
 
             echo "Building and pushing image for $SERVICE..."
@@ -93,15 +93,15 @@ jobs:
           FRONTEND_CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q 'next-frontend/' && echo "true" || echo "false")
           echo "FRONTEND_CHANGED=$FRONTEND_CHANGED" >> $GITHUB_ENV
 
-      # 8. Build and Deploy Frontend if changed
+      # 8. Build and Deploy Frontend using next-frontend Dockerfile
       - name: Build and Deploy Frontend
         if: env.FRONTEND_CHANGED == 'true'
         run: |
-          IMAGE_NAME=gcr.io/wama-microservices/next-frontend
+          IMAGE_NAME=us-central1-docker.pkg.dev/wama-microservices/artifact-repo/next-frontend
           IMAGE_TAG=$(date +%Y%m%d%H%M%S)
 
-          echo "Building and pushing frontend image..."
-          docker build -t $IMAGE_NAME:$IMAGE_TAG ./next-frontend
+          echo "Building frontend image using next-frontend Dockerfile..."
+          docker build -t $IMAGE_NAME:$IMAGE_TAG -f ./next-frontend/Dockerfile.prod ./next-frontend
           docker push $IMAGE_NAME:$IMAGE_TAG
 
           echo "Deploying frontend to Cloud Run..."

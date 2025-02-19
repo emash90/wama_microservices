@@ -1,4 +1,5 @@
 import React from "react";
+import { ReactNode } from "react";
 import {
   Box,
   Typography,
@@ -14,8 +15,8 @@ import CustomTextField from "@/app/(DashboardLayout)/components/forms/theme-elem
 
 interface loginType {
   title?: string;
-  subtitle?: JSX.Element | JSX.Element[];
-  subtext?: JSX.Element | JSX.Element[];
+  subtitle?: ReactNode;
+  subtext?: ReactNode;
 }
 
 const AuthLogin = ({ title, subtitle, subtext }: loginType) => (

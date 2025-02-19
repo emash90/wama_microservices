@@ -1,4 +1,6 @@
 import React from "react";
+import { ReactNode } from "react";
+
 import {
   Box,
   Typography,
@@ -10,8 +12,8 @@ import Link from "next/link";
 
 interface RegisterProps {
   title?: string;
-  subtitle?: JSX.Element | JSX.Element[];
-  subtext?: JSX.Element | JSX.Element[];
+  subtitle?: ReactNode;
+  subtext?: ReactNode;
 }
 
 const AuthRegister = ({ title, subtitle, subtext }: RegisterProps) => (

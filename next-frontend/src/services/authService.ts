@@ -5,7 +5,8 @@ const USER_API_URL = `${BASE_URL}/user`;
 
 interface User {
   id?: string;
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   password?: string;
   role?: string;

@@ -5,6 +5,7 @@ import { Box, Typography } from '@mui/material';
 import DashboardCard from '@/app/(DashboardLayout)/components/shared/DashboardCard';
 import dynamic from 'next/dynamic';
 import { useTheme } from '@mui/material/styles';
+import { ApexOptions } from 'apexcharts';
 
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
@@ -29,7 +30,7 @@ const HouseDataChart: React.FC<HouseDataChartProps> = ({ data = [] }) => {
 
   const maxValue = Math.max(occupiedCount, vacantCount, commercialCount, residentialCount, 8);
 
-  const chartOptions = {
+  const chartOptions: ApexOptions = {
     chart: {
       type: 'bar',
       fontFamily: "'Plus Jakarta Sans', sans-serif",

@@ -13,22 +13,28 @@ import {
 import { useForm, Controller } from "react-hook-form";
 
 interface Tenant {
-  tenant_first_name: string;
-  tenant_last_name: string;
-  tenant_phone: string;
-  tenant_email: string;
-  tenant_rent: number;
-  active: boolean;
+  _id: string,
+  tenant_first_name: string,
+  tenant_last_name: string,
+  tenant_phone: string,
+  tenant_house_id: string,
+  tenant_email: string,
+  tenant_rent: number,
+  active: boolean,
+  balance: number,
+  createdAt: string,
+  updatedAt: string,
 }
 
 interface EditTenantModalProps {
   open: boolean;
   onClose: () => void;
   tenant: Tenant | null;
-  onUpdate: (updatedTenant: Tenant) => void;
+  setTenants: React.Dispatch<React.SetStateAction<Tenant[]>>;
+  // onUpdate: (updatedTenant: Tenant) => void;
 }
 
-const EditTenantModal: React.FC<EditTenantModalProps> = ({ open, onClose, tenant, onUpdate }) => {
+const EditTenantModal: React.FC<EditTenantModalProps> = ({ open, onClose, tenant, setTenants }) => {
   const {
     control,
     handleSubmit,
@@ -54,7 +60,7 @@ const EditTenantModal: React.FC<EditTenantModalProps> = ({ open, onClose, tenant
 
   const onSubmit = (data: Tenant) => {
     if (!isValid) return;
-    onUpdate(data);
+    // onUpdate(data);
     onClose();
   };
 

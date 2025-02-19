@@ -1,8 +1,10 @@
+import { ReactNode } from "react";
 import { Card } from "@mui/material";
+
 
 type Props = {
   className?: string;
-  children: JSX.Element | JSX.Element[];
+    children: ReactNode;
 };
 
 const BlankCard = ({ children, className }: Props) => {

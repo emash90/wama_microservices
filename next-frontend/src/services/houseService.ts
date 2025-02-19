@@ -27,11 +27,12 @@ axiosInstance.interceptors.request.use(
 
 // Define house type interface
 interface House {
-  id?: string;
-  name: string;
-  location: string;
-  price: number;
-  owner?: string;
+  _id: string;
+  house_number: string;
+  house_location: string;
+  house_price: number;
+  house_type: number;
+  occupied: boolean;
 }
 
 // Get all houses
@@ -80,4 +81,5 @@ const updateHouse = async (houseId: string, house: Partial<House>): Promise<Hous
   }
 };
 
-export { fetchHouses, addHouse, fetchHouseById, updateHouse, House };
+export { fetchHouses, addHouse, fetchHouseById, updateHouse };
+export type { House };

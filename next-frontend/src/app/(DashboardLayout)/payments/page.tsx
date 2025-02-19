@@ -157,7 +157,7 @@ const Payment: React.FC = () => {
     <PageContainer title="Payments" description="this is the payments page">
       <DashboardCard>
         <Typography>
-          <ListPayments payments={dummyPayments} tenants={dummyTenantData}/>
+        <ListPayments payments={dummyPayments} tenants={dummyTenantData} setPayments={setPayments} />
         </Typography>
       </DashboardCard>
     </PageContainer>
