@@ -37,5 +37,5 @@ app.use((err, req, res, next) => {
 const PORT = process.env.HOUSE_SERVICE_PORT || 4002;
 
 app.listen(PORT, () => {
-  console.log(`House service listening on port ${PORT}!!!!`);
+  console.log(`House service listening on port ${PORT}!!`);
 });
