@@ -97,10 +97,10 @@ jobs:
       - name: Build and Deploy Frontend
         if: env.FRONTEND_CHANGED == 'true'
         run: |
-          IMAGE_NAME=us-central1-docker.pkg.dev/wama-microservices/artifact-repo/next-frontend
+          IMAGE_NAME=gcr.io/wama-microservices/next-frontend
           IMAGE_TAG=$(date +%Y%m%d%H%M%S)
 
-          echo "Building frontend image using next-frontend Dockerfile..."
+          echo "Building frontend image using next-frontend Dockerfile.prod file..."
           docker build -t $IMAGE_NAME:$IMAGE_TAG -f ./next-frontend/Dockerfile.prod ./next-frontend
           docker push $IMAGE_NAME:$IMAGE_TAG
 
