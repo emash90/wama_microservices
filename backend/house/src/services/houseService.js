@@ -3,7 +3,7 @@ const House = require('../models/houseModel');
 const { connectRabbitMQ, getChannel } = require('../../utils/rabbitmq');
 
 const getAllHouses = async () => {
-  return await House.find();
+  return await House.find({ house_number: { $ne: "" } }).sort({ createdAt: -1 }); 
 };
 
 const getHouseById = async (id) => {

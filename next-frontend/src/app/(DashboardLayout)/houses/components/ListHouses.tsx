@@ -17,6 +17,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import AddHouseModal from "@/app/(DashboardLayout)/houses/components/AddHouseModal";
 import EditHouseModal from "@/app/(DashboardLayout)/houses/components/EditHouseModal";
+import { deleteHouse, updateHouse } from "@/services/houseService";
 
 interface House {
   _id: string;
@@ -68,7 +69,8 @@ const ListHouses: React.FC<ListHousesProps> = ({ houses, setHouses }) => {
   const handleDelete = async () => {
     if (!selectedHouse) return;
     try {
-      await fetch(`/api/houses/${selectedHouse._id}`, { method: "DELETE" });
+      const updatedHouse = { ...selectedHouse, house_number: "" };
+      await updateHouse(selectedHouse._id, updatedHouse)
       setHouses((prev) => prev.filter((house) => house._id !== selectedHouse._id));
     } catch (error) {
       console.error("Error deleting house:", error);
@@ -86,7 +88,7 @@ const ListHouses: React.FC<ListHousesProps> = ({ houses, setHouses }) => {
       field: "house_type",
       headerName: "Type",
       width: 250,
-        valueGetter: (value) =>(value === 0 ? "Residential" : "Cormercial")
+        valueGetter: (value) =>(value === 1 ? "Residential" : "Cormercial")
     },
     {
       field: "occupied",

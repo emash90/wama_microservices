@@ -19,9 +19,9 @@ const TenantStats: React.FC<TenantDataChartProps> = ({ tenantData = [] }) => {
   const theme = useTheme();
 
   // Tenant Data Chart Statistics
-  const activeCount = tenantData.filter((tenant) => tenant.active).length;
-  const inactiveCount = tenantData.length - activeCount;
-  const hasTenantData = tenantData.length > 0;
+  const activeCount = tenantData?.filter((tenant) => tenant.active).length;
+  const inactiveCount = tenantData?.length - activeCount;
+  const hasTenantData = tenantData?.length > 0;
 
   const tenantChartOptions: ApexOptions = {
     chart: {

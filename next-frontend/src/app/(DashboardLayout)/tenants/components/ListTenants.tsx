@@ -2,6 +2,8 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Tenant } from "@/types";
+
 import {
   Container,
   Typography,
@@ -18,20 +20,6 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import AddTenantModal from "@/app/(DashboardLayout)/tenants/components/AddTenantModal";
 import EditTenantModal from "@/app/(DashboardLayout)/tenants/components/EditTenantModal";
 
-interface Tenant {
-  _id: string,
-  tenant_first_name: string,
-  tenant_last_name: string,
-  tenant_phone: string,
-  tenant_house_id: string,
-  tenant_email: string,
-  tenant_rent: number,
-  active: boolean,
-  balance: number,
-  createdAt: string,
-  updatedAt: string,
-}
-
 
 interface VacantHouse {
   _id: string,
@@ -40,8 +28,6 @@ interface VacantHouse {
   house_location: string,
   house_price: number,
   occupied: boolean,
-  createdAt: string,
-  updatedAt: string,
 }
 
 interface ListTenantsProps {
@@ -97,12 +83,14 @@ const ListTenants: React.FC<ListTenantsProps> = ({ tenants, setTenants, vacantHo
 
   // Define tenant table columns
   const columns: GridColDef[] = [
-    { field: "tenant_first_name", headerName: "Name", width: 150 },
-    { field: "tenant_phone", headerName: "Phone", width: 150 },
+    { field: "tenant_first_name", headerName: "First Name", width: 150 },
+    { field: "tenant_last_name", headerName: "Last Name", width: 150 },
+    { field: "tenant_phone", headerName: "Phone", width: 100 },
     { field: "tenant_email", headerName: "Email", width: 150 },
-    { field: "tenant_house_id", headerName: "House Number", width: 150 },
-    { field: "createdAt", headerName: "Lease Start", width: 150 },
-    { field: "balance", headerName: "Balance", width: 150 },
+    { field: "tenant_house", headerName: "House Number", width: 50 },
+    { field: "createdAt", headerName: "Lease Start", width: 100 },
+    { field: "tenant_rent", headerName: "House Rent", width: 100, type: "number"},
+    { field: "balance", headerName: "Balance", width: 100, type: "number"},
     {
       field: "actions",
       headerName: "Actions",

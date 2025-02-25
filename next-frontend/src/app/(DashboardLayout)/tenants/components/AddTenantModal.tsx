@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Tenant, House } from "@/types";
 import {
   Dialog,
   DialogTitle,
@@ -10,28 +11,11 @@ import {
   Grid,
   Stack,
   Typography,
+  CircularProgress,
+  Alert,
 } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
-
-interface House {
-  _id: string;
-  house_number: string;
-  house_price: number;
-}
-
-interface Tenant {
-  _id: string,
-  tenant_first_name: string,
-  tenant_last_name: string,
-  tenant_phone: string,
-  tenant_house_id: string,
-  tenant_email: string,
-  tenant_rent: number,
-  active: boolean,
-  balance: number,
-  createdAt: string,
-  updatedAt: string,
-}
+import { addTenant } from '@/services/tenantServices';
 
 interface AddTenantModalProps {
   open: boolean;
@@ -46,6 +30,7 @@ const AddTenantModal: React.FC<AddTenantModalProps> = ({ open, onClose, setTenan
     handleSubmit,
     reset,
     setValue,
+    watch,
     formState: { errors, isValid },
   } = useForm<Tenant>({
     mode: "onBlur",
@@ -56,36 +41,59 @@ const AddTenantModal: React.FC<AddTenantModalProps> = ({ open, onClose, setTenan
       tenant_phone: "",
       tenant_house_id: "",
       tenant_rent: 0,
+      balance: 0, // Ensure balance is in default values
     },
   });
 
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // Watch house selection to dynamically update rent and balance
+  const selectedHouseId = watch("tenant_house_id");
+
   useEffect(() => {
-    if (!open) reset();
+    if (!open) {
+      reset();
+      setError(null);
+    }
   }, [open, reset]);
 
-  const handleHouseSelection = (houseId: string) => {
-    const selectedHouse = houses.find((house) => house._id === houseId);
+  useEffect(() => {
+    const selectedHouse = houses.find((house) => house._id === selectedHouseId);
     if (selectedHouse) {
-      setValue("tenant_house_id", selectedHouse._id);
-      setValue("tenant_rent", selectedHouse.house_price);
+      const rent = selectedHouse.house_price;
+      setValue("tenant_rent", rent);
+      setValue("balance", rent * 2); // Tenant balance = House rent * 2
     }
-  };
+  }, [selectedHouseId, houses, setValue]);
 
-  const onSubmit = (data: Tenant) => {
-    if (!isValid) return;
-    setTenants((prevTenants) => [...prevTenants, data]);
-    reset();
-    onClose();
+  const onSubmit = async (data: Tenant) => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const newTenant = await addTenant({
+        ...data,
+        active: data.active ?? true,
+      });
+
+      setTenants((prevTenants) => [newTenant, ...prevTenants]);
+      reset();
+      onClose();
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
       <DialogTitle>
-        <Typography variant="h6" fontWeight="bold">
-          Add New Tenant
-        </Typography>
+        <Typography variant="h6" fontWeight="bold">Add New Tenant</Typography>
       </DialogTitle>
       <DialogContent>
+        {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
         <form onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
@@ -103,7 +111,6 @@ const AddTenantModal: React.FC<AddTenantModalProps> = ({ open, onClose, setTenan
                     error={!!errors.tenant_house_id}
                     helperText={errors.tenant_house_id?.message}
                     required
-                    onChange={(e) => handleHouseSelection(e.target.value)}
                   >
                     {houses.map((house) => (
                       <MenuItem key={house._id} value={house._id}>
@@ -120,6 +127,15 @@ const AddTenantModal: React.FC<AddTenantModalProps> = ({ open, onClose, setTenan
                 control={control}
                 render={({ field }) => (
                   <TextField {...field} label="Rent Amount" fullWidth margin="dense" disabled />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Controller
+                name="balance"
+                control={control}
+                render={({ field }) => (
+                  <TextField {...field} label="Balance (Rent * 2)" fullWidth margin="dense" disabled />
                 )}
               />
             </Grid>
@@ -210,11 +226,17 @@ const AddTenantModal: React.FC<AddTenantModalProps> = ({ open, onClose, setTenan
             }}
             color="secondary"
             variant="outlined"
+            disabled={loading}
           >
             Cancel
           </Button>
-          <Button onClick={handleSubmit(onSubmit)} color="primary" variant="contained">
-            Add Tenant
+          <Button
+            onClick={handleSubmit(onSubmit)}
+            color="primary"
+            variant="contained"
+            disabled={loading}
+          >
+            {loading ? <CircularProgress size={24} /> : "Add Tenant"}
           </Button>
         </Stack>
       </DialogActions>
