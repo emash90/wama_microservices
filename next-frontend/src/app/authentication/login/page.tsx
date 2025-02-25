@@ -45,9 +45,9 @@ const Login2 = () => {
     try {
       const response = await loginUser(user);
       if (response?.status === 200 && response.data?.token) {
-        if (typeof window !== "undefined") {
-          localStorage.setItem("token", response.data.token);
-        }
+        // if (typeof window !== "undefined") {
+        //   localStorage.setItem("token", response.data.token);
+        // }
         router.push("/");
       } else {
         setError(response.data?.message || "Login failed. Please try again.");
