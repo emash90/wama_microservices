@@ -1,12 +1,14 @@
 import axios, { AxiosResponse } from 'axios';
 import { House } from '@/types'
+import { getCookie } from 'cookies-next';
 
 const BASE_URL: string = 'http://localhost:4000';
 const HOUSE_API_URL: string = `${BASE_URL}/house`;
 
 // Function to get the token from localStorage
 const getAuthToken = (): string | null => {
-  return localStorage.getItem('token'); // Retrieves the stored token
+  const token = getCookie('token');
+  return typeof token === 'string' ? token : null;
 };
 
 // Create an axios instance to add the Authorization header for each request

@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
+import { setCookie, deleteCookie } from "cookies-next";
 
 const BASE_URL = 'http://localhost:4000';
 const USER_API_URL = `${BASE_URL}/user`;
@@ -36,11 +37,20 @@ const validateToken = async (token: string): Promise<boolean> => {
 const loginUser = async (user: { email: string; password: string }): Promise<ApiResponse<any>> => {
   try {
     const response: AxiosResponse<any> = await axios.post(`${USER_API_URL}/login`, user);
+    if (response.data.token) {
+      setCookie('authToken', response.data.token, { maxAge: 60 * 60 * 24, path: '/' }); // Cookie expires in 1 day
+    }
+
     return response;
   } catch (error: any) {
     console.error('Error logging in:', error);
     return error.response;
   }
+};
+
+// Logout user (clear token from cookie)
+const logoutUser = (): void => {
+  deleteCookie('authToken');
 };
 
 // Register user
@@ -87,4 +97,4 @@ const updateUser = async (userId: string, user: Partial<User>): Promise<User | n
   }
 };
 
-export { loginUser, fetchUsers, registerUser, fetchUserById, updateUser, validateToken };
+export { loginUser, logoutUser, fetchUsers, registerUser, fetchUserById, updateUser, validateToken };
