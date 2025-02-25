@@ -105,7 +105,7 @@ jobs:
           docker push $IMAGE_NAME:$IMAGE_TAG
 
           echo "Deploying frontend to Cloud Run..."
-          gcloud run deploy next-frontend \
+          gcloud run deploy frontend \
             --image $IMAGE_NAME:$IMAGE_TAG \
             --platform managed \
             --region us-central1 \
