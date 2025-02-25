@@ -13,9 +13,11 @@ import TenantStats from '@/app/(DashboardLayout)/components/dashboard/TenantStat
 import Blog from '@/app/(DashboardLayout)/components/dashboard/Blog';
 import ProductSales from '@/app/(DashboardLayout)/components/dashboard/ProductSales';
 import { fetchHouses }  from '@/services/houseService';
+import { fetchTenants } from '@/services/tenantServices';
 
 const Dashboard = () => {
   const [houseData, setHouseData] = useState<any>(null);
+  const [tenantData, setTenantData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   const dummyHouseData = [
@@ -110,7 +112,18 @@ const Dashboard = () => {
         setLoading(false);
       }
     };
-
+    const fetchTenantData = async () => {
+      try {
+        const data = await fetchTenants()
+        setTenantData(data)
+        console.log('tenant data', tenantData)
+      } catch (error) {
+        console.error('Error fetching tenant data:', error);
+      } finally {
+        setLoading(false);
+        }
+    }
+    fetchTenantData()
     fetchHouseData();
   }, []);
   
@@ -119,15 +132,15 @@ const Dashboard = () => {
       <Box>
         <Grid container spacing={3}>
           <Grid item xs={12} lg={6}>
-            <HouseDataChart data={dummyHouseData} />
+            <HouseDataChart data={houseData} />
           </Grid>
           <Grid item xs={12} lg={6}>
             <Grid container spacing={3}>
               <Grid item xs={12}>
-                <ActiveTenants tenantData={dummyTenantData} />
+                <ActiveTenants tenantData={tenantData} />
               </Grid>
               <Grid item xs={12}>
-                <TenantStats tenantData={dummyTenantData}  />
+                <TenantStats tenantData={tenantData}  />
               </Grid>
             </Grid>
           </Grid>

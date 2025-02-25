@@ -21,12 +21,12 @@ const HouseDataChart: React.FC<HouseDataChartProps> = ({ data = [] }) => {
   const theme = useTheme();
 
   // Calculate statistics for chart data
-  const occupiedCount = data.filter((house) => house.occupied).length;
-  const vacantCount = data.length - occupiedCount;
-  const commercialCount = data.filter((house) => house.house_type === 1).length;
-  const residentialCount = data.length - commercialCount;
+  const occupiedCount = data?.filter((house) => house.occupied).length;
+  const vacantCount = data?.length - occupiedCount;
+  const commercialCount = data?.filter((house) => house.house_type === 2).length;
+  const residentialCount = data?.length - commercialCount;
 
-  const hasData = data.length > 0;
+  const hasData = data?.length > 0;
 
   const maxValue = Math.max(occupiedCount, vacantCount, commercialCount, residentialCount, 8);
 
@@ -38,7 +38,7 @@ const HouseDataChart: React.FC<HouseDataChartProps> = ({ data = [] }) => {
       toolbar: { show: true },
       height: 427,
     },
-    colors: [theme.palette.primary.main, theme.palette.secondary.main, '#FF5733', '#33FF57'],
+    colors: [theme.palette.primary.main, theme.palette.secondary.main,  '#33FF57', '#FF5733'],
     plotOptions: {
       bar: {
         horizontal: false,

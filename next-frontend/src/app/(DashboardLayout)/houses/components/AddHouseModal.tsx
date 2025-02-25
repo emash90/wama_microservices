@@ -1,4 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import  { House }  from "@/types";
+
 import {
   Dialog,
   DialogTitle,
@@ -12,15 +14,9 @@ import {
   Typography,
 } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
+import { addHouse } from "@/services/houseService";
 
-interface House {
-  _id: string;
-  house_number: string;
-  house_location: string;
-  house_price: number;
-  house_type: number;
-  occupied: boolean;
-}
+
 
 interface AddHouseModalProps {
   open: boolean;
@@ -28,14 +24,14 @@ interface AddHouseModalProps {
   setHouses: React.Dispatch<React.SetStateAction<House[]>>;
 }
 
-const locations = ["New York", "Los Angeles", "Chicago", "Houston", "San Francisco"];
+const locations = ["Main Area", "Behind County Offices", "Stage", "Beside County Hospital"];
 
 const AddHouseModal: React.FC<AddHouseModalProps> = ({ open, onClose, setHouses }) => {
   const {
     control,
     handleSubmit,
     reset,
-    formState: { errors, isValid },
+    formState: { errors },
   } = useForm<House>({
     mode: "onBlur",
     defaultValues: {
@@ -47,16 +43,36 @@ const AddHouseModal: React.FC<AddHouseModalProps> = ({ open, onClose, setHouses 
     },
   });
 
-  // Reset form when modal opens/closes
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     if (!open) reset();
   }, [open, reset]);
 
-  const onSubmit = (data: House) => {
-    if (!isValid) return;
-    setHouses((prevHouses) => [...prevHouses, { ...data, house_type: Number(data.house_type), occupied: false, _id: crypto.randomUUID() }]);
-    reset();
-    onClose();
+  const onSubmit = async (data: House) => {
+    setLoading(true);
+    try {
+      const response = await addHouse({
+        ...data,
+        house_type: Number(data.house_type),
+        occupied: false,
+      });
+
+      if (response && response.data) {
+        setHouses((prevHouses) => [
+          { ...response.data, id: response.data._id },
+          ...prevHouses
+        ]);
+        reset();
+        onClose();
+      } else {
+        console.error("Unexpected response from API:", response);
+      }
+    } catch (error) {
+      console.error("Error adding house:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -163,16 +179,22 @@ const AddHouseModal: React.FC<AddHouseModalProps> = ({ open, onClose, setHouses 
         <Stack direction="row" spacing={2} width="100%" justifyContent="flex-end" padding={2}>
           <Button
             onClick={() => {
-              reset(); // Reset form when canceling
+              reset();
               onClose();
             }}
             color="secondary"
             variant="outlined"
+            disabled={loading}
           >
             Cancel
           </Button>
-          <Button onClick={handleSubmit(onSubmit)} color="primary" variant="contained">
-            Add House
+          <Button
+            onClick={handleSubmit(onSubmit)}
+            color="primary"
+            variant="contained"
+            disabled={loading}
+          >
+            {loading ? "Adding..." : "Add House"}
           </Button>
         </Stack>
       </DialogActions>

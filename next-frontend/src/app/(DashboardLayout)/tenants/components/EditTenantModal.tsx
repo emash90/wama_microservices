@@ -1,4 +1,6 @@
 import React, { useEffect } from "react";
+import { Tenant } from "@/types";
+
 import {
   Dialog,
   DialogTitle,
@@ -11,20 +13,6 @@ import {
   Typography,
 } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
-
-interface Tenant {
-  _id: string,
-  tenant_first_name: string,
-  tenant_last_name: string,
-  tenant_phone: string,
-  tenant_house_id: string,
-  tenant_email: string,
-  tenant_rent: number,
-  active: boolean,
-  balance: number,
-  createdAt: string,
-  updatedAt: string,
-}
 
 interface EditTenantModalProps {
   open: boolean;

@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
+import { House } from '@/types'
 
 const BASE_URL: string = 'http://localhost:4000';
 const HOUSE_API_URL: string = `${BASE_URL}/house`;
@@ -25,15 +26,7 @@ axiosInstance.interceptors.request.use(
   }
 );
 
-// Define house type interface
-interface House {
-  _id: string;
-  house_number: string;
-  house_location: string;
-  house_price: number;
-  house_type: number;
-  occupied: boolean;
-}
+
 
 // Get all houses
 const fetchHouses = async (): Promise<House[]> => {
@@ -81,5 +74,16 @@ const updateHouse = async (houseId: string, house: Partial<House>): Promise<Hous
   }
 };
 
-export { fetchHouses, addHouse, fetchHouseById, updateHouse };
+//delete house
+const deleteHouse = async (houseId: string): Promise<House | null> => {
+  try {
+    const response: AxiosResponse<House> = await axiosInstance.delete(`${HOUSE_API_URL}/${houseId}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error deleting house with ID ${houseId}:`, error);
+    return null;
+  }
+}
+
+export { fetchHouses, addHouse, fetchHouseById, updateHouse, deleteHouse };
 export type { House };
