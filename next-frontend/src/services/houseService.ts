@@ -1,10 +1,12 @@
 import axios, { AxiosResponse } from 'axios';
 import { House } from '@/types'
 import getAuthToken from '@/utils/getAuthToken';
+import { HOUSE_API_URL } from '@/config/config';
 
 
-const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL
-const HOUSE_API_URL: string = `${BASE_URL}/house`;
+
+// const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL
+// const HOUSE_API_URL: string = `${BASE_URL}/house`;
 
 // Function to get the token from localStorage
 // const getAuthToken = (): string | null => {
