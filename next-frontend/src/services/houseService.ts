@@ -3,7 +3,7 @@ import { House } from '@/types'
 import getAuthToken from '@/utils/getAuthToken';
 
 
-const BASE_URL: string = 'http://localhost:4000';
+const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL
 const HOUSE_API_URL: string = `${BASE_URL}/house`;
 
 // Function to get the token from localStorage
