@@ -5,6 +5,7 @@ import { ListSubheader, styled, Theme } from '@mui/material';
 type NavGroup = {
   navlabel?: boolean;
   subheader?: string;
+  onClick?: () => void;
 };
 
 interface ItemType {

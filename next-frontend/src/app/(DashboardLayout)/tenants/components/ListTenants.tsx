@@ -19,6 +19,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import AddTenantModal from "@/app/(DashboardLayout)/tenants/components/AddTenantModal";
 import EditTenantModal from "@/app/(DashboardLayout)/tenants/components/EditTenantModal";
+import { updateTenant } from "@/services/tenantServices";
 
 
 interface VacantHouse {
@@ -73,7 +74,8 @@ const ListTenants: React.FC<ListTenantsProps> = ({ tenants, setTenants, vacantHo
   const handleDelete = async () => {
     if (!selectedTenant) return;
     try {
-      await fetch(`/api/tenants/${selectedTenant._id}`, { method: "DELETE" });
+      const inctiveTenant = { ...selectedTenant, active: false };
+      await updateTenant(selectedTenant._id, inctiveTenant)
       setTenants((prev) => prev.filter((tenant) => tenant._id !== selectedTenant._id));
     } catch (error) {
       console.error("Error deleting tenant:", error);

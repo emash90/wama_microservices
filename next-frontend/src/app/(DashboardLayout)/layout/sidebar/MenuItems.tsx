@@ -1,3 +1,4 @@
+import { logoutUser } from "@/services/authService";
 import {
   IconAperture,
   IconCopy,
@@ -23,6 +24,7 @@ interface MenuItem {
   href?: string;
   navlabel?: boolean;
   subheader?: string;
+  onClick?: () => void;
 }
 
 const Menuitems: MenuItem[] = [
@@ -72,7 +74,7 @@ const Menuitems: MenuItem[] = [
     id: uniqueId(),
     title: "Logout",
     icon: IconLogout,
-    href: "/authentication/login",
+    onClick: logoutUser,
   },
 ];
 

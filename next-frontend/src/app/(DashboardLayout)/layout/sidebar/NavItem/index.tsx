@@ -27,7 +27,8 @@ type NavGroup = {
   variant?: string | any;
   external?: boolean;
   level?: number;
-  onClick?: React.MouseEvent<HTMLButtonElement, MouseEvent>;
+  // onClick?: React.MouseEvent<HTMLButtonElement, MouseEvent>;
+  onClick?: () => void;
 };
 
 interface ItemType {
@@ -133,15 +134,15 @@ export default function NavItem({
     <List component="li" disablePadding key={item?.id && item.title}>
       <Link href={item.href} style={{ textDecoration: "none" }}>
         <ListItemStyled
-          // {...listItemProps}
+          {...listItemProps}
           disabled={item?.disabled}
           selected={pathDirect === item?.href}
-          onClick={undefined}
+          onClick={onClick}
           sx={{
             "&:hover": {
               ".MuiListItemIcon-root": {
                 color: item.bgcolor + ".main",
-                //backgroundColor: level < 2 ? menu.bgcolor + ".light" : "",
+                // backgroundColor: level < 2 ? menu.bgcolor + ".light" : "",
               },
             },
             "&:hover::before": {

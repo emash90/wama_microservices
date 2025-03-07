@@ -23,5 +23,5 @@ app.use(userRoutes);
 connectDB();
 
 app.listen(PORT, () => {
-console.log(`user service listing on port ${PORT}!!!!`)
+console.log(`user service listing on port ${PORT}`)
 })

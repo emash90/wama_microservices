@@ -94,7 +94,10 @@ const listenForPaymentUpdates = async () => {
 
 
 const getAllTenants = async () => {
-  const pipeline = getTenantsPipeline();
+  filter = {
+    active: true
+  }
+  const pipeline = getTenantsPipeline(filter);
   return await Tenant.aggregate(pipeline);
 };
 
