@@ -1,9 +1,10 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import getAuthToken from '@/utils/getAuthToken';
+import { TENANT_API_URL } from '@/config/config';
 
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
-const TENANT_API_URL: string = `${BASE_URL}/tenant`;
+// const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+// const TENANT_API_URL: string = `${BASE_URL}/tenant`;
 
 
 // Function to get the token from localStorage

@@ -1,9 +1,11 @@
 import axios, { AxiosResponse } from 'axios';
 import { setCookie, deleteCookie } from "cookies-next";
+import { USER_API_URL } from '@/config/config';
 
-const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL
-console.log("base url", BASE_URL)
-const USER_API_URL = `${BASE_URL}/user`;
+
+// const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL
+// console.log("base url", BASE_URL)
+// const USER_API_URL = `${BASE_URL}/user`;
 
 interface User {
   id?: string;
