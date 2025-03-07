@@ -1,15 +1,16 @@
 import axios, { AxiosResponse } from 'axios';
 import { House } from '@/types'
-import { getCookie } from 'cookies-next';
+import getAuthToken from '@/utils/getAuthToken';
+
 
 const BASE_URL: string = 'http://localhost:4000';
 const HOUSE_API_URL: string = `${BASE_URL}/house`;
 
 // Function to get the token from localStorage
-const getAuthToken = (): string | null => {
-  const token = getCookie('token');
-  return typeof token === 'string' ? token : null;
-};
+// const getAuthToken = (): string | null => {
+//   const token = getCookie('authToken');
+//   return typeof token === 'string' ? token : null;
+// };
 
 // Create an axios instance to add the Authorization header for each request
 const axiosInstance = axios.create();
@@ -19,6 +20,7 @@ axiosInstance.interceptors.request.use(
   (config) => {
     const token = getAuthToken();
     if (token) {
+      console.log(token)
       config.headers['Authorization'] = `Bearer ${token}`;
     }
     return config;

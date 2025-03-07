@@ -45,6 +45,7 @@ const Login2 = () => {
     try {
       const response = await loginUser(user);
       if (response?.status === 200 && response.data?.token) {
+        console.log("response --->", response)
         // if (typeof window !== "undefined") {
         //   localStorage.setItem("token", response.data.token);
         // }

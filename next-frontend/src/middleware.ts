@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export function middleware(req: NextRequest) {
-  const token = req.cookies.get("token")?.value;
+  const token = req.cookies.get("authToken")?.value;
+  console.log("auth token", token)
 
   const protectedRoutes = ["/tenants", "/houses", "/payments", "/reports", "/"];
 

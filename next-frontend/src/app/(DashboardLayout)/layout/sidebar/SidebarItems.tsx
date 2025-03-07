@@ -25,7 +25,12 @@ const SidebarItems = ({ toggleMobileSidebar }: any) => {
                 item={item}
                 key={item.id}
                 pathDirect={pathDirect}
-                onClick={toggleMobileSidebar}
+                onClick={(e) => {
+                  if (item.onClick) {
+                    item.onClick();
+                  }
+                  toggleMobileSidebar(e);
+                }}
               />
             );
           }

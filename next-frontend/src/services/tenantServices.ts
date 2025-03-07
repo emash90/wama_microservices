@@ -1,12 +1,15 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
+import getAuthToken from '@/utils/getAuthToken';
+
 
 const BASE_URL: string = 'http://localhost:4000';
 const TENANT_API_URL: string = `${BASE_URL}/tenant`;
 
+
 // Function to get the token from localStorage
-const getAuthToken = (): string | null => {
-  return localStorage.getItem('token');
-};
+// const getAuthToken = (): string | null => {
+//   return localStorage.getItem('token');
+// };
 
 // Define the Tenant type
 interface Tenant {
