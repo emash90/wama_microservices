@@ -33,7 +33,7 @@ type NavGroup = {
 
 interface ItemType {
   item: NavGroup;
-  onClick: (event: React.MouseEvent<HTMLElement>) => void;
+  onClick?: (event: React.MouseEvent<HTMLElement>) => void;
   hideMenu?: any;
   level?: number | any;
   pathDirect: string;
@@ -132,83 +132,29 @@ export default function NavItem({
 
   return (
     <List component="li" disablePadding key={item?.id && item.title}>
-      <Link href={item.href} style={{ textDecoration: "none" }}>
-        <ListItemStyled
-          {...listItemProps}
-          disabled={item?.disabled}
-          selected={pathDirect === item?.href}
-          onClick={onClick}
-          sx={{
-            "&:hover": {
-              ".MuiListItemIcon-root": {
-                color: item.bgcolor + ".main",
-                // backgroundColor: level < 2 ? menu.bgcolor + ".light" : "",
-              },
-            },
-            "&:hover::before": {
-              backgroundColor: item.bgcolor + ".light",
-            },
-            // ".MuiListItemIcon-root": {
-            //   color: item.bgcolor + ".main",
-            //   backgroundColor: item.bgcolor + ".light",
-            // },
-            "&.Mui-selected": {
-              color:
-                level > 1
-                  ? `${theme.palette.text.secondary} !important`
-                  : "primary.main",
-              "& .MuiTypography-root": {
-                fontWeight: "600 !important" ,
-              },
-              ".MuiListItemIcon-root": {
-                color: "primary.main",
-              },
-              "&:before": {
-                backgroundColor: "primary.light",
-              },
-              "&:hover": {
-                color: "primary.main",
-                ".MuiListItemIcon-root": {
-                  color: "primary.main",
-                },
-              },
-            },
-          }}
-        >
-          <ListItemIcon
-            sx={{
-              minWidth: "36px",
-              p: "3px 0",
-              color:
-                level > 1 && pathDirect === item?.href
-                  ? `${theme.palette.primary.main}!important`
-                  : "inherit",
-            }}
-          >
-            {itemIcon}
-          </ListItemIcon>
-          <ListItemText>
-            {hideMenu ? "" : <>{`${item?.title}`}</>}
-            <br />
-            {item?.subtitle ? (
-              <Typography variant="caption">
-                {hideMenu ? "" : item?.subtitle}
-              </Typography>
-            ) : (
-              ""
+      {item.href ? (
+        <Link href={item.href} style={{ textDecoration: "none" }}>
+          <ListItemStyled {...listItemProps} disabled={item?.disabled} selected={pathDirect === item?.href}>
+            <ListItemIcon sx={{ minWidth: "36px", p: "3px 0" }}>
+              {itemIcon}
+            </ListItemIcon>
+            <ListItemText>
+              {!hideMenu && item?.title}
+              {item?.subtitle && !hideMenu && (
+                <Typography variant="caption">{item.subtitle}</Typography>
+              )}
+            </ListItemText>
+            {!item?.chip || hideMenu ? null : (
+              <Chip color={item.chipColor} variant={item.variant || "filled"} size="small" label={item.chip} />
             )}
-          </ListItemText>
-
-          {!item?.chip || hideMenu ? null : (
-            <Chip
-              color={item?.chipColor}
-              variant={item?.variant ? item?.variant : "filled"}
-              size="small"
-              label={item?.chip}
-            />
-          )}
+          </ListItemStyled>
+        </Link>
+      ) : (
+        <ListItemStyled onClick={item.onClick} disabled={item?.disabled}>
+          <ListItemIcon sx={{ minWidth: "36px", p: "3px 0" }}>{itemIcon}</ListItemIcon>
+          <ListItemText>{!hideMenu && item?.title}</ListItemText>
         </ListItemStyled>
-      </Link>
+      )}
     </List>
   );
 }

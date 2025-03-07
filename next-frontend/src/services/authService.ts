@@ -1,6 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
 import { setCookie, deleteCookie } from "cookies-next";
-import { useRouter } from "next/router";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL
 console.log("base url", BASE_URL)
@@ -41,7 +40,7 @@ const loginUser = async (user: { email: string; password: string }): Promise<Api
     const response: AxiosResponse<any> = await axios.post(`${USER_API_URL}/login`, user);
     console.log("response", response)
     if (response.data.token) {
-      setCookie('authToken', response.data.token, { maxAge: 60 * 60 * 24, path: '/' }); // Cookie expires in 1 day
+      setCookie('authToken', response.data.token, { maxAge: 60 * 60 * 1, path: '/' });
     }
 
     return response;
@@ -53,11 +52,9 @@ const loginUser = async (user: { email: string; password: string }): Promise<Api
 
 // Logout user (clear token from cookie)
 const logoutUser = (): void => {
-  const router = useRouter();
-
   deleteCookie('authToken');
   console.log("logged out")
-  router.push('/authentication/login')
+  window.location.href = "/authentication/login";
 };
 
 // Register user
