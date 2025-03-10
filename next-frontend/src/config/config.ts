@@ -1,6 +1,7 @@
 import getConfig from "next/config";
 
 const { publicRuntimeConfig } = getConfig();
+console.log("publicRuntimeConfig", publicRuntimeConfig)
 const BASE_URL = publicRuntimeConfig?.NEXT_PUBLIC_BACKEND_URL;
 
 console.log("Base URL at runtime:", BASE_URL);
