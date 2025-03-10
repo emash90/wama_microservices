@@ -49,14 +49,17 @@ const Login2 = () => {
         // if (typeof window !== "undefined") {
         //   localStorage.setItem("token", response.data.token);
         // }
-        router.push("/");
+        router.replace("/");
+        // Delay setLoading(false) to avoid conflicts
+        setTimeout(() => setLoading(false), 100);
+        return
       } else {
         setError(response.data?.message || "Login failed. Please try again.");
       }
     } catch (err) {
       setError("An error occurred while logging in. Please check your connection and try again.");
     } finally {
-      setLoading(false);
+      if (!loading) setLoading(false);
     }
   };
 

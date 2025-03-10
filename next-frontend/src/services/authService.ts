@@ -48,7 +48,7 @@ const loginUser = async (user: { email: string; password: string }): Promise<Api
     return response;
   } catch (error: any) {
     console.error('Error logging in:', error);
-    return error;
+    return error.response
   }
 };
 
