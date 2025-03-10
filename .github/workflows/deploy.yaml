@@ -96,12 +96,14 @@ jobs:
       # 8. Build and Deploy Frontend (Using Dockerfile.prod)
       - name: Build and Deploy Frontend
         if: env.FRONTEND_CHANGED == 'true'
+        env:
+          NEXT_PUBLIC_BACKEND_URL: ${{ secrets.NEXT_PUBLIC_BACKEND_URL }}  # Load env variable securely
         run: |
           IMAGE_NAME=gcr.io/wama-microservices/next-frontend
           IMAGE_TAG=$(date +%Y%m%d%H%M%S)
 
           echo "Building and pushing frontend image using Dockerfile.prod..."
-          docker build -t $IMAGE_NAME:$IMAGE_TAG -f ./next-frontend/Dockerfile.prod ./next-frontend
+          docker build --build-arg NEXT_PUBLIC_BACKEND_URL=${NEXT_PUBLIC_BACKEND_URL} -t $IMAGE_NAME:$IMAGE_TAG -f ./next-frontend/Dockerfile.prod ./next-frontend
           docker push $IMAGE_NAME:$IMAGE_TAG
 
           echo "Deploying frontend to Cloud Run..."
@@ -110,4 +112,5 @@ jobs:
             --platform managed \
             --region us-central1 \
             --allow-unauthenticated \
-            --port 3000
+            --port 3000 \
+            --set-env-vars NEXT_PUBLIC_BACKEND_URL=${NEXT_PUBLIC_BACKEND_URL}  # Pass env variable at runtime
