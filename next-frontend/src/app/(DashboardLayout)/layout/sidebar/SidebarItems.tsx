@@ -1,24 +1,23 @@
+"use client"; // Required to use hooks in Next.js App Router
+
 import React from "react";
-import Menuitems from "./MenuItems";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Box, List } from "@mui/material";
+import Menuitems from "./MenuItems";
 import NavItem from "./NavItem";
 import NavGroup from "./NavGroup/NavGroup";
 
 const SidebarItems = ({ toggleMobileSidebar }: any) => {
   const pathname = usePathname();
+  const router = useRouter();
   const pathDirect = pathname;
-
+  
   return (
     <Box sx={{ px: "20px" }}>
       <List sx={{ pt: 0 }} className="sidebarNav" component="div">
-        {Menuitems.map((item) => {
-          // {/********SubHeader**********/}
+        {Menuitems(router.push).map((item) => {
           if (item.subheader) {
             return <NavGroup item={item} key={item.subheader} />;
-
-            // {/********If Sub Menu**********/}
-            /* eslint no-else-return: "off" */
           } else {
             return (
               <NavItem
@@ -39,4 +38,5 @@ const SidebarItems = ({ toggleMobileSidebar }: any) => {
     </Box>
   );
 };
+
 export default SidebarItems;

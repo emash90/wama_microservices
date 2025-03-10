@@ -1,20 +1,13 @@
 import { logoutUser } from "@/services/authService";
+import handleNavigation from "@/utils/handleNavigation";
 import {
-  IconAperture,
-  IconCopy,
   IconLayoutDashboard,
-  IconLogin,
-  IconMoodHappy,
-  IconTypography,
-  IconUserPlus,
-  IconLogout,
   IconHome2,
   IconUsers,
+  IconCashBanknote,
   IconReportMoney,
-  IconMoneybag,
-  IconCashBanknote
+  IconLogout,
 } from "@tabler/icons-react";
-
 import { uniqueId } from "lodash";
 
 interface MenuItem {
@@ -27,7 +20,7 @@ interface MenuItem {
   onClick?: () => void;
 }
 
-const Menuitems: MenuItem[] = [
+const Menuitems = (navigate: (path: string) => void): MenuItem[] => [
   {
     navlabel: true,
     subheader: "Home",
@@ -36,7 +29,7 @@ const Menuitems: MenuItem[] = [
     id: uniqueId(),
     title: "Dashboard",
     icon: IconLayoutDashboard,
-    href: "/",
+    onClick: () => handleNavigation(navigate, "/"),
   },
   {
     navlabel: true,
@@ -46,25 +39,25 @@ const Menuitems: MenuItem[] = [
     id: uniqueId(),
     title: "Houses",
     icon: IconHome2,
-    href: "/houses",
+    onClick: () => handleNavigation(navigate, "/houses"),
   },
   {
     id: uniqueId(),
     title: "Tenants",
     icon: IconUsers,
-    href: "/tenants",
+    onClick: () => handleNavigation(navigate, "/tenants"),
   },
   {
     id: uniqueId(),
     title: "Payments",
     icon: IconCashBanknote,
-    href: "/payments",
+    onClick: () => handleNavigation(navigate, "/payments"),
   },
   {
     id: uniqueId(),
     title: "Reports",
     icon: IconReportMoney,
-    href: "/reports",
+    onClick: () => handleNavigation(navigate, "/reports"),
   },
   {
     navlabel: true,
@@ -79,5 +72,3 @@ const Menuitems: MenuItem[] = [
 ];
 
 export default Menuitems;
-
-
