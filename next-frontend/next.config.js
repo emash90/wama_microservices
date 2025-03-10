@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   experimental: { appDir: true },
-  env: {
+  publicRuntimeConfig: {
     NEXT_PUBLIC_BACKEND_URL: process.env.NEXT_PUBLIC_BACKEND_URL,
   },
 };
