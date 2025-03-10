@@ -34,4 +34,6 @@ ENV PORT=3000
 EXPOSE 3000
 
 # Start Next.js in production mode
-CMD ["npm", "run", "start"]
+# Instead of hardcoding at build, inject at runtime
+CMD NEXT_PUBLIC_BACKEND_URL=$NEXT_PUBLIC_BACKEND_URL npm run start
+
