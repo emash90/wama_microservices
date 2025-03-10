@@ -15,4 +15,5 @@ export function middleware(req: NextRequest) {
 
 export const config = {
   matcher: ["/tenants/:path*", "/houses/:path*", "/payments/:path*", "/reports/:path*", "/"],
+  runtime: "nodejs", 
 };

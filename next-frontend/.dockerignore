@@ -1,7 +1,14 @@
 node_modules/
 .git/
-.env
+.env*
 *.log
 build/
 dist/
-.next
+.next/
+.DS_Store
+docker-compose.yml
+Dockerfile*
+README.md
+.vscode/
+.idea/
+*.swp
