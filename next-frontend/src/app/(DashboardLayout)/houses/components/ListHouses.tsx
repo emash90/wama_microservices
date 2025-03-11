@@ -54,7 +54,7 @@ const ListHouses: React.FC<ListHousesProps> = ({ houses, setHouses }) => {
   // View House
   const handleView = () => {
     if (selectedHouse) {
-      router.push(`/house/${selectedHouse._id}`);
+      router.push(`/houses/${selectedHouse._id}`);
     }
     handleMenuClose(selectedHouse?._id || "");
   };

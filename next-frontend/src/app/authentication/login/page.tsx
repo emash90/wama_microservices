@@ -46,10 +46,10 @@ const Login2 = () => {
       const response = await loginUser(user);
       if (response?.status === 200 && response.data?.token) {
         console.log("response --->", response)
-        // if (typeof window !== "undefined") {
-        //   localStorage.setItem("token", response.data.token);
-        // }
-        router.replace("/");
+     
+        setTimeout(() => {
+          router.replace("/");
+        }, 5000);
         // Delay setLoading(false) to avoid conflicts
         setTimeout(() => setLoading(false), 100);
         return
