@@ -9,8 +9,8 @@ import { useRouter } from "next/navigation";
 
 const Register2 = () => {
   const [user, setUser] = useState({
-    firstName: "",
-    lastName: "",
+    first_name: "",
+    last_name: "",
     email: "",
     password: "",
   });
@@ -27,7 +27,7 @@ const Register2 = () => {
 
   // Validate form before submitting
   const validateForm = () => {
-    if (!user.firstName || !user.lastName || !user.email || !user.password) {
+    if (!user.first_name || !user.last_name || !user.email || !user.password) {
       setError("All fields are required.");
       return false;
     }
@@ -82,8 +82,8 @@ const Register2 = () => {
           {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
 
           <form onSubmit={handleRegister}>
-            <TextField fullWidth margin="normal" label="First Name" variant="outlined" name="firstName" value={user.firstName} onChange={handleChange} required />
-            <TextField fullWidth margin="normal" label="Last Name" variant="outlined" name="lastName" value={user.lastName} onChange={handleChange} required />
+            <TextField fullWidth margin="normal" label="First Name" variant="outlined" name="first_name" value={user.first_name} onChange={handleChange} required />
+            <TextField fullWidth margin="normal" label="Last Name" variant="outlined" name="last_name" value={user.last_name} onChange={handleChange} required />
             <TextField fullWidth margin="normal" label="Email" variant="outlined" type="email" name="email" value={user.email} onChange={handleChange} required />
             <TextField fullWidth margin="normal" label="Password" type="password" variant="outlined" name="password" value={user.password} onChange={handleChange} required />
 

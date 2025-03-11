@@ -59,7 +59,7 @@ const ListTenants: React.FC<ListTenantsProps> = ({ tenants, setTenants, vacantHo
   // View Tenant
   const handleView = () => {
     if (selectedTenant) {
-      router.push(`/tenant/${selectedTenant._id}`);
+      router.push(`/tenants/${selectedTenant._id}`);
     }
     handleMenuClose(selectedTenant?._id || "");
   };
@@ -74,8 +74,8 @@ const ListTenants: React.FC<ListTenantsProps> = ({ tenants, setTenants, vacantHo
   const handleDelete = async () => {
     if (!selectedTenant) return;
     try {
-      const inctiveTenant = { ...selectedTenant, active: false };
-      await updateTenant(selectedTenant._id, inctiveTenant)
+      const inactiveTenant = { ...selectedTenant, active: false };
+      await updateTenant(selectedTenant._id, inactiveTenant)
       setTenants((prev) => prev.filter((tenant) => tenant._id !== selectedTenant._id));
     } catch (error) {
       console.error("Error deleting tenant:", error);

@@ -108,7 +108,7 @@ const getTenantById = async (id) => {
 
   const tenants = await Tenant.aggregate(pipeline);
 
-  return tenants
+  return tenants.length > 0 ? tenants[0] : null; 
 };
 
 const findTenantByPhoneNumber = async (tenant_phone) => {

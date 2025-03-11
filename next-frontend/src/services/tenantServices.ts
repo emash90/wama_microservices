@@ -19,6 +19,7 @@ interface Tenant {
   tenant_last_name: string,
   tenant_phone: string,
   tenant_house_id: string,
+  tenant_house? : string,
   tenant_email: string,
   tenant_rent: number,
   active: boolean,
@@ -71,7 +72,7 @@ const addTenant = async (tenant: Tenant): Promise<Tenant> => {
 const fetchTenantById = async (tenantId: string): Promise<Tenant | null> => {
   try {
     const response: AxiosResponse<Tenant> = await axiosInstance.get(`${TENANT_API_URL}/${tenantId}`);
-    return response.data;
+    return response.data
   } catch (error) {
     console.error(`Error fetching tenant with ID ${tenantId}:`, error);
     return null;

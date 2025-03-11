@@ -9,8 +9,8 @@ import { USER_API_URL } from '@/config/config';
 
 interface User {
   id?: string;
-  firstName: string;
-  lastName: string;
+  first_name: string;
+  last_name: string;
   email: string;
   password?: string;
   role?: string;
