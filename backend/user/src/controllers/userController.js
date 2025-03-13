@@ -11,7 +11,7 @@ const getAllUsers = async(req, res, next) => {
 
 const login = async (req, res, next) => {
     try {
-        console.log("body ==>", req.body)
+        console.log("body! ==>", req.body)
         const { email, password } = req.body;
         // Find user by email
         const user = await userService.findOne(email);

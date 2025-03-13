@@ -87,18 +87,26 @@ const ListPayments: React.FC<ListPaymentsProps> = ({ payments, setPayments, tena
 
   const confirmPayment = async () => {
     if (!selectedPayment) return;
+  
     const updatedPayment = { ...selectedPayment, status: "confirmed" };
+  
     try {
-      const response = await updatePayment(updatedPayment._id || "", updatedPayment)
-
-      if(response) {
-
+      const response = await updatePayment(updatedPayment._id || "", updatedPayment);
+  
+      if (response) {
+        setPayments((prev) =>
+          prev.map((payment) =>
+            payment._id === updatedPayment._id ? updatedPayment : payment
+          )
+        );
       }
-    } catch (eror) {
-      console.error("Error confirming payment:", eror);
+    } catch (error) {
+      console.error("Error confirming payment:", error);
     }
+  
     handleMenuClose(selectedPayment?._id || "");
   };
+  
 
 
 
@@ -162,7 +170,7 @@ const ListPayments: React.FC<ListPaymentsProps> = ({ payments, setPayments, tena
             >
               <MenuItem onClick={handleView}>View</MenuItem>
               <MenuItem onClick={handleEdit}>Edit</MenuItem>
-              <MenuItem onClick={confirmPayment}>Confirm Payment</MenuItem>
+              <MenuItem onClick={confirmPayment} disabled={payment.status === "confirmed"}>Confirm Payment</MenuItem>
               {/* <MenuItem onClick={handleDelete}>Delete</MenuItem> */}
             </Menu>
           </>

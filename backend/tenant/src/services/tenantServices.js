@@ -71,7 +71,7 @@ const listenForPaymentUpdates = async () => {
 
             // Save the updated tenant data
             await tenant.save();
-            console.log(`Tenant balance updated for tenant ID ${tenantId}. New balance: ${tenant.balance}`);
+            console.log(`Tenant balance updated for tenant ID ${tenantId}. New balance => ${tenant.balance}`);
 
             // Acknowledge the message as processed
             channel.ack(msg);
