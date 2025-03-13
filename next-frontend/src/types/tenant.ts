@@ -4,6 +4,9 @@ export interface Tenant {
     tenant_last_name: string;
     tenant_phone: string;
     tenant_house_id: string;
+    house_number?: string;
+    tenant_house?: string;
+    house_id?: string;
     tenant_email: string;
     tenant_rent: number;
     active: boolean;

@@ -16,28 +16,31 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import AddPaymentModal from "./AddPaymentModal";
 import EditPaymentModal from "./EditPaymentModal";
+import { addPayment, updatePayment } from "@/services/paymentService";
+import type { Tenant, Payment } from '@/types';
 
-interface Payment {
-    _id: string;
-    tenant_id: string;
-    house_id: string;
-    amount_due: number;
-    amount_paid: number;
-    balance: number;
-    date_paid: string;
-    full_payment: boolean;
-    payment_mode: string;
-    month: string;
-    status: string;
-    createdAt: string;
-    updatedAt: string;
-    __v: number;
-  }
+
+// interface Payment {
+//   _id: string;
+//   tenant_id: string;
+//   house_id: string;
+//   amount_paid: number;
+//   date_paid: string;
+//   month: string;
+//   status?: string;
+//   tenantDetails?: {
+//     tenant_first_name: string;
+//     tenant_last_name: string;
+//   };
+//   houseDetails?: {
+//     house_number: string;
+//   };
+// }
 
 interface ListPaymentsProps {
   payments: Payment[];
   setPayments: React.Dispatch<React.SetStateAction<Payment[]>>;
-  tenants: any[]; 
+  tenants: any[];
 }
 
 const ListPayments: React.FC<ListPaymentsProps> = ({ payments, setPayments, tenants }) => {
@@ -49,7 +52,7 @@ const ListPayments: React.FC<ListPaymentsProps> = ({ payments, setPayments, tena
   const [search, setSearch] = useState({ name: "", house: "" });
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLButtonElement>, payment: Payment) => {
-    setAnchorEl((prev) => ({ ...prev, [payment._id]: event.currentTarget }));
+    setAnchorEl((prev) => ({ ...prev, [payment._id ?? ""]: event.currentTarget }));
     setSelectedPayment(payment);
   };
 
@@ -69,49 +72,110 @@ const ListPayments: React.FC<ListPaymentsProps> = ({ payments, setPayments, tena
     handleMenuClose(selectedPayment?._id || "");
   };
 
-  const handleDelete = async () => {
-    if (!selectedPayment) return;
+  const onAddPayment = async (payment: Payment) => {
     try {
-      await fetch(`/api/payments/${selectedPayment._id}`, { method: "DELETE" });
-      setPayments((prev) => prev.filter((payment) => payment._id !== selectedPayment._id));
+      const newPayment = await addPayment(payment);
+      if (newPayment) {
+        setPayments((prev) => [newPayment, ...prev]);
+      }
+      setShowAddModal(false);
     } catch (error) {
-      console.error("Error deleting payment:", error);
+      console.error("Error adding payment:", error);
     }
-    handleMenuClose(selectedPayment._id);
-  };
+    handleMenuClose(selectedPayment?._id || "");
+  }
 
-//   const filteredPayments = payments.filter(
-//     (payment) =>
-//       payment.tenant_name.toLowerCase().includes(search.name.toLowerCase()) &&
-//       payment.tenant_house_number.toLowerCase().includes(search.house.toLowerCase())
-//   );
+  const confirmPayment = async () => {
+    if (!selectedPayment) return;
+  
+    const updatedPayment = { ...selectedPayment, status: "confirmed" };
+  
+    try {
+      const response = await updatePayment(updatedPayment._id || "", updatedPayment);
+  
+      if (response) {
+        setPayments((prev) =>
+          prev.map((payment) =>
+            payment._id === updatedPayment._id ? updatedPayment : payment
+          )
+        );
+      }
+    } catch (error) {
+      console.error("Error confirming payment:", error);
+    }
+  
+    handleMenuClose(selectedPayment?._id || "");
+  };
+  
+
+
+
+  // const handleDelete = async () => {
+  //   if (!selectedPayment) return;
+  //   try {
+  //     await fetch(`/api/payments/${selectedPayment._id}`, { method: "DELETE" });
+  //     setPayments((prev) => prev.filter((payment) => payment._id !== selectedPayment._id));
+  //   } catch (error) {
+  //     console.error("Error deleting payment:", error);
+  //   }
+  //   handleMenuClose(selectedPayment?._id || "");
+  // };
+
+  const filteredPayments = payments.filter(
+    (payment) =>
+      (payment.tenantDetails?.tenant_first_name.toLowerCase().includes(search.name.toLowerCase()) ||
+       payment.tenantDetails?.tenant_last_name.toLowerCase().includes(search.name.toLowerCase())) &&
+      payment.houseDetails?.house_number.toLowerCase().includes(search.house.toLowerCase())
+  );
 
   const columns: GridColDef[] = [
-    { field: "tenant_name", headerName: "Tenant Name", width: 200 },
-    { field: "tenant_house_number", headerName: "House Number", width: 150 },
-    { field: "amount_paid", headerName: "Amount Paid", width: 150, type: "number" },
+    {
+      field: "tenantDetails",
+      headerName: "Tenant Name",
+      width: 250,
+      valueGetter: (params: any) => {
+        return `${params.tenant_first_name || ""} ${params.tenant_last_name || ""}`;
+      },
+    },
+    {
+      field: "houseDetails",
+      headerName: "House Number",
+      width: 100,
+      valueGetter: (params: any) => {
+        return params.house_number || "";
+      },
+    },
+    { field: "amount_paid", headerName: "Amount Paid", width: 150 },
     { field: "date_paid", headerName: "Date Paid", width: 150 },
-    { field: "balance", headerName: "Balance", width: 180, type: "number" },
+    { field: "month", headerName: "Month", width: 150 },
+    { field: "status", headerName: "Status", width: 150 },
     {
       field: "actions",
       headerName: "Actions",
-      width: 100,
-      renderCell: (params) => (
-        <>
-          <IconButton onClick={(e) => handleMenuOpen(e, params.row as Payment)}>
-            <MoreVertIcon />
-          </IconButton>
-          <Menu
-            anchorEl={anchorEl[params.row._id]}
-            open={Boolean(anchorEl[params.row._id])}
-            onClose={() => handleMenuClose(params.row._id)}
-          >
-            <MenuItem onClick={handleView}>View</MenuItem>
-            <MenuItem onClick={handleEdit}>Edit</MenuItem>
-            <MenuItem onClick={handleDelete}>Delete</MenuItem>
-          </Menu>
-        </>
-      ),
+      width: 150,
+      renderCell: (params) => {
+        const payment = params.row as Payment;
+        return (
+          <>
+            <IconButton onClick={(event) => handleMenuOpen(event, payment)}>
+              <MoreVertIcon />
+            </IconButton>
+            <Menu
+              anchorEl={anchorEl[payment._id || ""]}
+              open={Boolean(anchorEl[payment._id || ""])}
+              onClose={() => handleMenuClose(payment._id || "")}
+              MenuListProps={{
+                "aria-labelledby": "basic-button",
+              }}
+            >
+              <MenuItem onClick={handleView}>View</MenuItem>
+              <MenuItem onClick={handleEdit}>Edit</MenuItem>
+              <MenuItem onClick={confirmPayment} disabled={payment.status === "confirmed"}>Confirm Payment</MenuItem>
+              {/* <MenuItem onClick={handleDelete}>Delete</MenuItem> */}
+            </Menu>
+          </>
+        );
+      },
     },
   ];
 
@@ -123,7 +187,8 @@ const ListPayments: React.FC<ListPaymentsProps> = ({ payments, setPayments, tena
           Add Payment
         </Button>
       </Box>
-      {/* <Box display="flex" gap={2} mb={2}>
+
+      <Box display="flex" gap={2} mb={2}>
         <TextField
           label="Search by Name"
           variant="outlined"
@@ -136,18 +201,21 @@ const ListPayments: React.FC<ListPaymentsProps> = ({ payments, setPayments, tena
           value={search.house}
           onChange={(e) => setSearch({ ...search, house: e.target.value })}
         />
-      </Box> */}
+      </Box>
+
       <div style={{ height: 450, width: "100%" }}>
         <DataGrid
-          rows={payments}
+          rows= {filteredPayments}
           columns={columns}
           pageSizeOptions={[5, 10, 20]}
           pagination
           getRowId={(row) => row._id}
         />
       </div>
-      {/* <AddPaymentModal open={showAddModal} onClose={() => setShowAddModal(false)} setPayments={setPayments} tenants={tenants} />
-      <EditPaymentModal open={showEditModal} onClose={() => setShowEditModal(false)} payment={selectedPayment} setPayments={setPayments} /> */}
+
+      <AddPaymentModal open={showAddModal} onClose={() => setShowAddModal(false)} setPayments={setPayments} tenants={tenants} onAddPayment={onAddPayment} />
+      {}
+      <EditPaymentModal open={showEditModal} onClose={() => setShowEditModal(false)} payment={selectedPayment} tenants={tenants} setPayments={setPayments} />
     </Container>
   );
 };

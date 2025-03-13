@@ -37,11 +37,14 @@ const buildPaymentPipeline = (filter = {}) => {
         date_paid: 1,
         status: 1,
         month: 1,
+        createdAt: 1,
+        updatedAt: 1,
         'tenantDetails.tenant_first_name': 1,
         'tenantDetails.tenant_last_name': 1,
         'houseDetails.house_number': 1,
       },
     },
+    { $sort: { createdAt: -1 } },
   ];
   return pipeline;
 };
@@ -67,7 +70,8 @@ const createPayment= async (houseData) => {
     _id: newPayment._id
   }
   const pipeline = buildPaymentPipeline(filter)
-  return Payment.aggregate(pipeline)
+  const response = await Payment.aggregate(pipeline)
+  return response.length > 0 ? response[0] : null;
 };
 
 const updatePayment = async (id, updateData) => {
