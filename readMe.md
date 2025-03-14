@@ -53,7 +53,11 @@ Ensure the following tools are installed before starting:
    ```bash
    git clone <repository_url>
    cd wama_microservices
+2. Use Docker to run the services
+    ```bash
+    docker compose up -d
+
    
 ### Simple System Design
 
-![System Design](./wama-microservices.drawio)
+![System Design](./wama-microservices.drawio.png)
