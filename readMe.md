@@ -53,3 +53,5 @@ Ensure the following tools are installed before starting:
    ```bash
    git clone <repository_url>
    cd wama_microservices
+
+![System Design](./wama-microservices.jpg)
