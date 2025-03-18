@@ -104,10 +104,10 @@ services:
 
   frontend:
     build:
-      context: ./next-frontend
+      context: ./react-frontend
       dockerfile: Dockerfile.dev
     volumes:
-      - ./next-frontend:/app
+      - ./react-frontend:/app
       - /app/node_modules
     ports:
       - "3000:3000"
