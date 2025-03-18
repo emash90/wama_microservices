@@ -112,11 +112,15 @@ const AddTenantModal: React.FC<AddTenantModalProps> = ({ open, onClose, setTenan
                     helperText={errors.tenant_house_id?.message}
                     required
                   >
-                    {houses.map((house) => (
-                      <MenuItem key={house._id} value={house._id}>
-                        {house.house_number}
-                      </MenuItem>
-                    ))}
+                    {houses.length > 0 ? (
+                      houses.map((house) => (
+                        <MenuItem key={house._id} value={house._id}>
+                          {house.house_number}
+                        </MenuItem>
+                      ))
+                    ) : (
+                      <MenuItem value="">No houses available</MenuItem>
+                    )}
                   </TextField>
                 )}
               />

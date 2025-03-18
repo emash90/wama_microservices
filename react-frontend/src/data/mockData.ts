@@ -285,50 +285,57 @@ export const payments: RealPayment[] = [
 ];
 
 // Dashboard Stats
-export const getDashboardStats = () => {
+export const getDashboardStats = (houses: RealHouse[], tenants: RealTenant[], payments: RealPayment[]) => {
   const totalHouses = houses.length;
-  const vacantHouses = houses.filter(house => house.occupied == true).length;
-  const occupiedHouses = houses.filter(house => house.occupied == true).length;
-  const residentialHouses = houses.filter(house => house.house_type == 1).length;
-  const commercialHouses = houses.filter(house => house.house_type == 2).length;
+  const occupiedHouses = houses.filter(house => house.occupied).length;
+  const vacantHouses = totalHouses - occupiedHouses;
+
+  const residentialHouses = houses.filter(house => house.house_type === 1);
+  const commercialHouses = houses.filter(house => house.house_type === 2);
+
+  const totalResidentialHouses = residentialHouses.length;
+  const totalCommercialHouses = commercialHouses.length;
+
+  const vacantResidentialHouses = residentialHouses.filter(house => !house.occupied).length;
+  const vacantCommercialHouses = commercialHouses.filter(house => !house.occupied).length;
 
   const totalTenants = tenants.length;
-  const activeTenants = tenants.filter(tenant => tenant.active == true).length;
-  const residentialTenants = tenants.filter(tenant => tenant.tenant_house === 'Residential').length;
-  const commercialTenants = tenants.filter(tenant => tenant.tenant_house === 'Commercial').length;
-  
+  const activeTenants = tenants.filter(tenant => tenant.active).length;
+  const residentialTenants = tenants.filter(tenant => tenant.house_type === 1).length;
+  const commercialTenants = tenants.filter(tenant => tenant.house_type === 2).length;
+
   const totalPayments = payments.length;
-  const receivedPayments = payments.length;
-  const confirmedPayments = payments.filter(payment => payment.status === 'Confirmed').length;
-  const pendingPayments = payments.filter(payment => payment.status === 'Pending').length;
-  
+  const confirmedPayments = payments.filter(payment => payment.status === 'confirmed').length;
+  const pendingPayments = payments.filter(payment => payment.status !== 'confirmed');
+
   const totalRevenue = payments.reduce((sum, payment) => sum + payment.amount_paid, 0);
-  const pendingRevenue = payments.filter(payment => payment.status === 'Pending')
-    .reduce((sum, payment) => sum + payment.amount_paid, 0);
+  const pendingRevenue = pendingPayments.reduce((sum, payment) => sum + payment.amount_paid, 0);
 
   return {
     houses: {
       total: totalHouses,
-      vacant: vacantHouses,
       occupied: occupiedHouses,
-      residential: residentialHouses,
-      commercial: commercialHouses,
-      occupancyRate: Math.round((occupiedHouses / totalHouses) * 100)
+      vacant: vacantHouses,
+      residential: totalResidentialHouses,
+      commercial: totalCommercialHouses,
+      vacantResidential: vacantResidentialHouses,
+      vacantCommercial: vacantCommercialHouses,
+      occupancyRate: totalHouses > 0 ? Math.round((occupiedHouses / totalHouses) * 100) : 0,
     },
     tenants: {
       total: totalTenants,
       active: activeTenants,
       residential: residentialTenants,
-      commercial: commercialTenants
+      commercial: commercialTenants,
     },
     payments: {
       total: totalPayments,
-      received: receivedPayments,
       confirmed: confirmedPayments,
-      pending: pendingPayments,
+      pending: pendingPayments.length,
       totalRevenue,
-      pendingRevenue
-    }
+      pendingRevenue,
+      received: totalRevenue - pendingRevenue,
+    },
   };
 };
 
@@ -346,7 +353,7 @@ export const getHouseById = (id: string | null) => {
 };
 
 // Helper to filter payments by month
-export const getPaymentsByMonth = (month: number, year: number) => {
+export const getPaymentsByMonth = (payments: RealPayment[], month: number, year: number) => {
   return payments.filter(payment => {
     const paymentDate = new Date(payment.date_paid);
     return paymentDate.getMonth() === month && paymentDate.getFullYear() === year;
@@ -354,7 +361,7 @@ export const getPaymentsByMonth = (month: number, year: number) => {
 };
 
 // Monthly revenue data for charts
-export const getMonthlyRevenue = () => {
+export const getMonthlyRevenue = (payments: RealPayment[]) => {
   const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   const currentYear = new Date().getFullYear();
   
@@ -374,7 +381,7 @@ export const getMonthlyRevenue = () => {
 };
 
 // Property type distribution for charts
-export const getPropertyTypeDistribution = () => {
+export const getPropertyTypeDistribution = (houses: RealHouse[]) => {
   const residential = houses.filter(house => house.house_type == 1).length;
   const commercial = houses.filter(house => house.house_type == 2).length;
   

@@ -6,6 +6,8 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { Menu, MenuItem, IconButton } from '@mui/material';
 import AddTenantModal from './AddTenantModal';
 import EditTenantModal from './EditTenantModal';
+import ConfirmationModal from './ConfirmationModal';
+import { updateTenant } from '@/services/tenantService';
 
 
 
@@ -25,6 +27,7 @@ const TenantsTable: React.FC<TenantsTableProps> = ({ tenants, setTenantsData, ho
   const [selectedTenant, setSelectedTenant] = useState<RealTenant | null>(null);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
 
   const handleSort = (field: keyof RealTenant) => {
     if (field === sortField) {
@@ -44,25 +47,60 @@ const TenantsTable: React.FC<TenantsTableProps> = ({ tenants, setTenantsData, ho
     setMenuAnchor(null);
     setSelectedTenant(null);
   };
+  const hideMenu = () => {
+    setMenuAnchor(null);
+  };
 
-  const handleViewHouse = () => {
+
+  const handleViewTenant = () => {
     if (selectedTenant) {
       console.log(selectedTenant);
     }
     handleMenuClose();
   };
 
-  const handleEditHouse = () => {
+  const handleEditTenant = () => {
     if (selectedTenant) {
       setShowEditModal(true);
     }
     handleMenuClose();
   };
 
-  const handleDeleteHouse = () => {
-    console.log(selectedTenant)
-    handleMenuClose();
+  const handleConfirmationModalShow = () => {
+    hideMenu();
+    setShowConfirmationModal(true);
   };
+  
+
+  const handleDeactivateTenant = async () => {
+    if (selectedTenant) {
+      const newTenantDetails = {
+        ...selectedTenant,
+        active: false,
+      };
+  
+      try {
+        const response = await updateTenant(selectedTenant._id, newTenantDetails);
+  
+        if (response) {
+  
+          // Remove the deactivated tenant from the list
+          setTenantsData((prevTenants) =>
+            prevTenants.filter((tenant) => tenant._id !== selectedTenant._id)
+          );
+  
+          setShowConfirmationModal(false);
+        } else {
+          console.error("Failed to deactivate tenant: No data in response");
+        }
+      } catch (error) {
+        console.error("Error deactivating tenant:", error);
+      }
+    } else {
+      console.error("No tenant selected for deactivation");
+    }
+  };
+  
 
   const filteredTenants = tenants.filter(tenant => {
     const matchesSearch = tenant.tenant_first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -244,9 +282,9 @@ const TenantsTable: React.FC<TenantsTableProps> = ({ tenants, setTenantsData, ho
           </tbody>
         </table>
         <Menu anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={handleMenuClose}>
-          <MenuItem onClick={handleViewHouse}>View Tenant</MenuItem>
-          <MenuItem onClick={handleEditHouse}>Edit Tenant</MenuItem>
-          <MenuItem onClick={handleDeleteHouse}>Delete Tenant</MenuItem>
+          <MenuItem onClick={handleViewTenant}>View Tenant</MenuItem>
+          <MenuItem onClick={handleEditTenant}>Edit Tenant</MenuItem>
+          <MenuItem onClick={handleConfirmationModalShow}>Deactivate Tenant</MenuItem>
         </Menu>
         {sortedTenants.length === 0 && (
           <div className="text-center py-8 text-muted-foreground">
@@ -257,6 +295,7 @@ const TenantsTable: React.FC<TenantsTableProps> = ({ tenants, setTenantsData, ho
     </div>
     <AddTenantModal open={showAddModal} onClose={() => setShowAddModal(false)} setTenantsData={setTenantsData} houses={housesData} />
     <EditTenantModal open={showEditModal} onClose={() => setShowEditModal(false)} tenant= {selectedTenant} setTenantsData={setTenantsData} />
+    <ConfirmationModal open={showConfirmationModal} onClose={() => setShowConfirmationModal(false)} onConfirm={handleDeactivateTenant} />
     </>
   );
 };

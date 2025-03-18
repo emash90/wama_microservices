@@ -1,14 +1,42 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Layout from '../components/layout/Layout';
 import DashboardCards from '../components/dashboard/DashboardCards';
 import DashboardCharts from '../components/dashboard/DashboardCharts';
 import { getDashboardStats, getMonthlyRevenue, getPropertyTypeDistribution } from '../data/mockData';
+import { fetchPayments } from '@/services/paymentService';
+import { fetchTenants } from '@/services/tenantService';
+import { fetchHouses } from '@/services/houseService';
+import { RealPayment as Payment, RealTenant as Tenant, RealHouse as House } from '../data/mockData';
 
 const Dashboard: React.FC = () => {
-  const stats = getDashboardStats();
-  const monthlyRevenue = getMonthlyRevenue();
-  const propertyDistribution = getPropertyTypeDistribution();
+  const [paymentData, setPaymentData] = useState<Payment[]>([]);
+  const [tenantData, setTenantData] = useState<Tenant[]>([]);
+  const [houseData, setHouseData] = useState<House[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await Promise.all([
+          fetchPayments(),
+          fetchTenants(),
+          fetchHouses()
+        ])
+        setPaymentData(data[0])
+        setTenantData(data[1])
+        setHouseData(data[2])
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    }
+    fetchData();
+  }, [])
+  
+  
+  
+  const stats = getDashboardStats(houseData, tenantData, paymentData)
+  const monthlyRevenue = getMonthlyRevenue(paymentData);
+  const propertyDistribution = getPropertyTypeDistribution(houseData);
 
   return (
     <Layout>

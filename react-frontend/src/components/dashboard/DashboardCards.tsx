@@ -72,6 +72,8 @@ interface DashboardCardsProps {
       occupied: number;
       residential: number;
       commercial: number;
+      vacantCommercial: number;
+      vacantResidential: number;
       occupancyRate: number;
     };
     tenants: {
@@ -111,11 +113,13 @@ const DashboardCards: React.FC<DashboardCardsProps> = ({ stats }) => {
         <StatsCard
           title="Residential Properties"
           value={stats.houses.residential}
+          description={`${stats.houses.vacantResidential} vacant`}
           icon={<Home size={24} />}
         />
         <StatsCard
           title="Commercial Properties"
           value={stats.houses.commercial}
+          description={`${stats.houses.vacantCommercial} vacant`}
           icon={<Store size={24} />}
         />
       </div>
@@ -148,7 +152,7 @@ const DashboardCards: React.FC<DashboardCardsProps> = ({ stats }) => {
         />
         <StatsCard
           title="Received Payments"
-          value={stats.payments.received}
+          value={stats.payments.received.toLocaleString()}
           icon={<CreditCard size={24} />}
         />
         <StatsCard

@@ -1,10 +1,24 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Layout from '../components/layout/Layout';
 import ReportsGenerator from '../components/reports/ReportsGenerator';
-import { payments } from '../data/mockData';
+import { RealPayment as Payment } from '../data/mockData';
+import { fetchPayments } from '@/services/paymentService';
 
 const Reports: React.FC = () => {
+
+  const [paymentData, setPaymentData] = useState<Payment[]>([]);
+  useEffect(() => {
+    const getPayments = async () => {
+      const resp = await fetchPayments();
+      setPaymentData(resp);
+    }
+    getPayments();
+  }, []);
+  if (!paymentData) {
+    return null;
+    }
+
   return (
     <Layout>
       <div className="page-container">
@@ -15,7 +29,7 @@ const Reports: React.FC = () => {
           </p>
         </div>
         
-        <ReportsGenerator payments={payments} />
+        <ReportsGenerator payments={paymentData} />
       </div>
     </Layout>
   );

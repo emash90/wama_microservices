@@ -15,6 +15,10 @@ const houseSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    tenantId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Tenant'
+    },
     house_price: {
         type: Number,
         required: true
