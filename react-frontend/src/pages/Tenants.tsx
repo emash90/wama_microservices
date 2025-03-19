@@ -28,7 +28,7 @@ const Tenants: React.FC = () => {
     fetchData()
   }, [])
 
-
+const vacantHouses = housesData.filter((house) => house.occupied === false)
 
   return (
     <Layout>
@@ -40,7 +40,7 @@ const Tenants: React.FC = () => {
           </p>
         </div>
         
-        <TenantsTable tenants={tenantsData} setTenantsData={setTenantsData} housesData={housesData} />
+        <TenantsTable tenants={tenantsData} setTenantsData={setTenantsData} housesData={vacantHouses} />
       </div>
     </Layout>
   );

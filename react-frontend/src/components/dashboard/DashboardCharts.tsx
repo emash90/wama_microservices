@@ -71,7 +71,7 @@ interface PropertyDistributionProps {
 }
 
 export const PropertyDistributionChart: React.FC<PropertyDistributionProps> = ({ data }) => {
-  const COLORS = ['hsl(var(--primary))', 'hsl(var(--secondary))'];
+  const COLORS = ['hsl(var(--primary))', 'hsl(var(--secondary-foreground))'];
   
   return (
     <div className="h-80 bg-card p-6 rounded-xl shadow-sm">

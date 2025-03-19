@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Payment, House, Tenant, getPaymentsByMonth, houses, tenants, getTenantById, getHouseById } from '../../data/mockData';
+import { RealPayment as Payment, House, Tenant, getPaymentsByMonth, houses, tenants, getTenantById, getHouseById } from '../../data/mockData';
 import { FileText, Download, Printer, Calendar } from 'lucide-react';
 
 interface ReportsGeneratorProps {
@@ -20,20 +20,19 @@ const ReportsGenerator: React.FC<ReportsGeneratorProps> = ({ payments }) => {
   
   // Generate last 5 years for the dropdown
   const years = Array.from({ length: 5 }, (_, i) => currentDate.getFullYear() - i);
+  const filteredPayments = getPaymentsByMonth(payments, selectedMonth, selectedYear);
   
-  const filteredPayments = getPaymentsByMonth(selectedMonth, selectedYear);
-  
-  const totalRevenue = filteredPayments.reduce((sum, payment) => sum + payment.amount, 0);
+  const totalRevenue = filteredPayments.reduce((sum, payment) => sum + payment.amount_paid, 0);
   const confirmedRevenue = filteredPayments
-    .filter(payment => payment.status === 'Confirmed')
-    .reduce((sum, payment) => sum + payment.amount, 0);
+    .filter(payment => payment.status === 'confirmed')
+    .reduce((sum, payment) => sum + payment.amount_paid, 0);
   const pendingRevenue = filteredPayments
-    .filter(payment => payment.status === 'Pending')
-    .reduce((sum, payment) => sum + payment.amount, 0);
+    .filter(payment => payment.status === 'pending')
+    .reduce((sum, payment) => sum + payment.amount_paid, 0);
   
   // Occupancy data
-  const occupiedHouses = houses.filter(house => house.status === 'Occupied').length;
-  const vacantHouses = houses.filter(house => house.status === 'Vacant').length;
+  const occupiedHouses = houses.filter(house => house.occupied === true).length;
+  const vacantHouses = houses.filter(house => house.occupied === false).length;
   const totalHouses = houses.length;
   const occupancyRate = Math.round((occupiedHouses / totalHouses) * 100);
   
@@ -41,13 +40,13 @@ const ReportsGenerator: React.FC<ReportsGeneratorProps> = ({ payments }) => {
     const headers = ['Date', 'Tenant', 'Property', 'Amount', 'Status', 'Method', 'Reference'];
     
     const rows = filteredPayments.map(payment => [
-      new Date(payment.date).toLocaleDateString(),
-      getTenantById(payment.tenantId),
-      getHouseById(payment.houseId)?.houseNumber || 'Unknown',
-      payment.amount.toString(),
+      new Date(payment.date_paid).toLocaleDateString(),
+      getTenantById(payment.tenant_id),
+      getHouseById(payment.house_id)?.house_number || 'Unknown',
+      payment.amount_paid.toString(),
       payment.status,
-      payment.method,
-      payment.reference
+      payment.payment_mode,
+      // payment.reference
     ]);
     
     const csvContent = [
@@ -67,9 +66,9 @@ const ReportsGenerator: React.FC<ReportsGeneratorProps> = ({ payments }) => {
       filename = `payments-${monthNames[selectedMonth]}-${selectedYear}.csv`;
     } else if (reportType === 'occupancy') {
       // Generate occupancy report CSV
-      csvContent = 'Property,Status,Tenant,Type,Rent\n';
+      csvContent = 'Property,Status,Type,Rent\n';
       houses.forEach(house => {
-        csvContent += `${house.houseNumber},${house.status},${getTenantById(house.tenantId)},${house.type},${house.rent}\n`;
+        csvContent += `${house.house_number},${house.occupied ? 'Occupied' : 'Vacant'},${house.house_type},${house.house_price}\n`;
       });
       filename = `occupancy-${monthNames[selectedMonth]}-${selectedYear}.csv`;
     } else if (reportType === 'revenue') {
@@ -190,18 +189,18 @@ const ReportsGenerator: React.FC<ReportsGeneratorProps> = ({ payments }) => {
                   </thead>
                   <tbody>
                     {filteredPayments.map((payment) => {
-                      const house = getHouseById(payment.houseId);
+                      const house = getHouseById(payment.house_id);
                       return (
                         <tr 
-                          key={payment.id} 
+                          key={payment._id} 
                           className="border-b border-border"
                         >
                           <td className="py-3 px-4 text-sm">
-                            {new Date(payment.date).toLocaleDateString()}
+                            {new Date(payment.date_paid).toLocaleDateString()}
                           </td>
-                          <td className="py-3 px-4 text-sm">{getTenantById(payment.tenantId)}</td>
-                          <td className="py-3 px-4 text-sm">{house?.houseNumber || 'Unknown'}</td>
-                          <td className="py-3 px-4 text-sm font-medium">${payment.amount.toLocaleString()}</td>
+                          <td className="py-3 px-4 text-sm">{payment.tenantDetails.tenant_first_name} {payment.tenantDetails.tenant_last_name}</td>
+                          <td className="py-3 px-4 text-sm">{payment.houseDetails.house_number}</td>
+                          <td className="py-3 px-4 text-sm font-medium">${payment.amount_paid.toLocaleString()}</td>
                           <td className="py-3 px-4 text-sm">
                             <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                               payment.status === 'Confirmed' 
@@ -213,8 +212,8 @@ const ReportsGenerator: React.FC<ReportsGeneratorProps> = ({ payments }) => {
                               {payment.status}
                             </span>
                           </td>
-                          <td className="py-3 px-4 text-sm">{payment.method}</td>
-                          <td className="py-3 px-4 text-sm text-muted-foreground">{payment.reference}</td>
+                          <td className="py-3 px-4 text-sm">{payment.payment_mode}</td>
+                          <td className="py-3 px-4 text-sm text-muted-foreground">{payment.payment_mode}</td>
                         </tr>
                       );
                     })}
@@ -267,26 +266,26 @@ const ReportsGenerator: React.FC<ReportsGeneratorProps> = ({ payments }) => {
                 <tbody>
                   {houses.map((house) => (
                     <tr 
-                      key={house.id} 
+                      key={house._id} 
                       className="border-b border-border"
                     >
-                      <td className="py-3 px-4 text-sm font-medium">{house.houseNumber}</td>
+                      <td className="py-3 px-4 text-sm font-medium">{house.house_number}</td>
                       <td className="py-3 px-4 text-sm">
                         <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                          house.status === 'Vacant' ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'
+                          house.occupied !== true ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'
                         }`}>
-                          {house.status}
+                          {house.occupied ? 'Occupied' : 'Vacant'}
                         </span>
                       </td>
-                      <td className="py-3 px-4 text-sm">{getTenantById(house.tenantId)}</td>
+                      <td className="py-3 px-4 text-sm">{getTenantById(house.house_number)}</td>
                       <td className="py-3 px-4 text-sm">
                         <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                          house.type === 'Residential' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800'
+                          house.house_type === 1 ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800'
                         }`}>
-                          {house.type}
+                          {house.house_type == 1 ? 'Residential' : 'Commercial'}
                         </span>
                       </td>
-                      <td className="py-3 px-4 text-sm">${house.rent.toLocaleString()}</td>
+                      <td className="py-3 px-4 text-sm">${house.house_price.toLocaleString()}</td>
                     </tr>
                   ))}
                 </tbody>

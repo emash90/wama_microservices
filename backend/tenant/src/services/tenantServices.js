@@ -160,6 +160,7 @@ const updateTenant = async (id, updateData) => {
       const message = JSON.stringify({
         houseId: updatedTenant.tenant_house_id,
         status: 'vacant',
+        tenantId: null
       });
 
       await channel.assertQueue('house_updates', { durable: true });

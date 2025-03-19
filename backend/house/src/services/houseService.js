@@ -23,11 +23,13 @@ const updateHouse = async (id, houseData) => {
   return await House.findByIdAndUpdate(id, houseData, { new: true });
 };
 
-const updateHouseOccupiedStatus = async (houseId, occupiedStatus) => {
+const updateHouseOccupiedStatus = async (houseId, occupiedStatus, tenantId) => {
   try {
     const updatedHouse = await House.findByIdAndUpdate(
       houseId,
-      { occupied: occupiedStatus },
+      { occupied: occupiedStatus,
+        tenantId: tenantId
+      },
       { new: true }
     );
     return updatedHouse;
@@ -51,11 +53,12 @@ const listenForTenantCreated = async () => {
 
         const houseId = tenantData.houseId;
         const status = tenantData.status === 'vacant' ? false : true;
+        const tenantId = tenantData.tenantId;
+
 
         // Update house occupied status
-        await updateHouseOccupiedStatus(houseId, status);
-        console.log(`Updated house ${houseId} to occupied status: ${status}`);
-
+        await updateHouseOccupiedStatus(houseId, status, tenantId);
+        console.log(`Updated house ${houseId} to occupied status: ${status} and tenantId: ${tenantId}`);
         channel.ack(msg);
       }
     });

@@ -224,9 +224,9 @@ const PaymentsTable: React.FC<PaymentsTableProps> = ({ payments, setPaymentData,
                   <td className="py-4 px-4 text-sm">
                     {new Date(payment.date_paid).toLocaleDateString()}
                   </td>
-                  <td className="py-4 px-4 text-sm font-medium">{getTenantById(payment.tenant_id)}</td>
-                  <td className="py-4 px-4 text-sm">{house?.house_number || 'Unknown'}</td>
-                  <td className="py-4 px-4 text-sm font-medium">${payment.amount_paid.toLocaleString()}</td>
+                  <td className="py-4 px-4 text-sm font-medium">{payment.tenantDetails.tenant_first_name} {payment.tenantDetails.tenant_last_name}</td>
+                  <td className="py-4 px-4 text-sm">{payment.houseDetails.house_number}</td>
+                  <td className="py-4 px-4 text-sm font-medium">Ksh. {payment.amount_paid.toLocaleString()}</td>
                   <td className="py-4 px-4 text-sm">{payment.payment_mode}</td>
                   <td className="py-4 px-4 text-sm">
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${

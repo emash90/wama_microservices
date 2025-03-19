@@ -34,6 +34,10 @@ const buildPaymentPipeline = (filter = {}) => {
       $project: {
         _id: 1,
         amount_paid: 1,
+        payment_date: 1,
+        payment_mode: 1,
+        tenant_id: 1,
+        house_id: 1,
         date_paid: 1,
         status: 1,
         month: 1,
