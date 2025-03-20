@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { RealHouse, getTenantById } from '../../data/mockData';
+import { RealHouse } from '../../data/mockData';
 import { Building, ChevronDown, ChevronUp, Search, Plus, Filter } from 'lucide-react';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { Menu, MenuItem, IconButton } from '@mui/material';
@@ -207,7 +207,9 @@ const HousesTable: React.FC<HousesTableProps> = ({ houses, setHousesData }) => {
                 <td className="py-4 px-4 text-sm">
                   <div className="font-medium">{house.house_number}</div>
                 </td>
-                <td className="py-4 px-4 text-sm">{}</td>
+                <td className="py-4 px-4 text-sm">
+                  <div className="font-medium">{house.tenantId ? house.tenant_first_name + ' ' + house.tenant_last_name : 'None'}</div>
+                </td>
                 <td className="py-4 px-4 text-sm">
                   <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                     house.house_type === 1 ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800'

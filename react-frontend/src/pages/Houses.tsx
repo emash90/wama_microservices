@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import Layout from '../components/layout/Layout';
 import HousesTable from '../components/houses/HousesTable';
-import { houses } from '../data/mockData';
 import { fetchHouses } from '@/services/houseService';
 
 const Houses: React.FC = () => {
@@ -11,7 +10,6 @@ const Houses: React.FC = () => {
   useEffect(() => {
     const fetchAllHouses =  async () => {
       const response = await fetchHouses()
-      console.log("response", response)
       setHousesData(response)
     }
     fetchAllHouses()

@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import Layout from '../components/layout/Layout';
 import TenantsTable from '../components/tenants/TenantsTable';
-import { tenants, houses } from '../data/mockData';
 import { fetchHouses } from '@/services/houseService';
 import { fetchTenants } from '@/services/tenantService';
 
@@ -17,7 +16,6 @@ const Tenants: React.FC = () => {
           fetchHouses(),
           fetchTenants()
         ])
-        console.log("response data", response)
         setHousesData(response[0])
         setTenantsData(response[1])
       } catch (error) {

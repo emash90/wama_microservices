@@ -17,7 +17,6 @@ const Payments: React.FC = () => {
         fetchPayments(),
         fetchTenants()
       ])
-      console.log("resp", resp)
       setPaymentData(resp[0])
       setTenantData(resp[1])
     }

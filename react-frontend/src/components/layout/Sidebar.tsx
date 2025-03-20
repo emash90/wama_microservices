@@ -3,6 +3,7 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Home, Building, Users, CreditCard, FileText, LogOut } from 'lucide-react';
 import { logoutUser } from '@/services/authService';
+import wama_logo from '@/assets/images/wama_logo.svg'
 
 interface SidebarProps {
   isOpen: boolean;
@@ -12,7 +13,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
   const location = useLocation();
   
   const menuItems = [
-    { name: 'Dashboard', path: '/', icon: <Home size={20} /> },
+    { name: 'Dashboard', path: '/dashboard', icon: <Home size={20} /> },
     { name: 'Houses', path: '/houses', icon: <Building size={20} /> },
     { name: 'Tenants', path: '/tenants', icon: <Users size={20} /> },
     { name: 'Payments', path: '/payments', icon: <CreditCard size={20} /> },
@@ -31,8 +32,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
     >
       <div className="flex flex-col h-full">
         <div className="flex items-center justify-center h-16 px-6 border-b border-sidebar-border">
+          <img src={wama_logo} alt="Wama Logo" className="h-8 w-8 mr-2" />
           <h1 className="text-xl font-semibold tracking-tight text-foreground">
-            Rental Manager
+            Wama Rentals
           </h1>
         </div>
         
