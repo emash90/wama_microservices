@@ -11,6 +11,7 @@ import Tenants from "./pages/Tenants";
 import Payments from "./pages/Payments";
 import Reports from "./pages/Reports";
 import Login from "./pages/Login";
+import Register from "./pages/Register";
 
 
 const queryClient = new QueryClient();
@@ -22,13 +23,13 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Dashboard />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/houses" element={<Houses />} />
           <Route path="/tenants" element={<Tenants />} />
           <Route path="/payments" element={<Payments />} />
           <Route path="/reports" element={<Reports />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           {/* <Route path="*" element={<NotFound />} /> */}
         </Routes>

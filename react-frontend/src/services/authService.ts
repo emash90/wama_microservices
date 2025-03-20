@@ -37,18 +37,36 @@ const validateToken = async (token: string): Promise<boolean> => {
 };
 
 // Login user
-const loginUser = async (user: { email: string; password: string }): Promise<ApiResponse<any>> => {
+const loginUser = async (user: { email: string; password: string }): Promise<{
+  success: boolean;
+  token?: string;
+  user?: User;
+  message?: string;
+}> => {
   try {
     const response: AxiosResponse<any> = await axios.post(`${USER_API_URL}/login`, user);
-    console.log("response", response)
-    if (response.data.token) {
+    if (response.status === 200) {
       setCookie('authToken', response.data.token, { maxAge: 60 * 60 * 1, path: '/' });
+
+      return {
+        success: true,
+        token: response.data.token,
+        user: {
+          email: response.data.email,
+          first_name: response.data.first_name,
+          last_name: response.data.last_name,
+          role: response.data.role,
+        },
+      };
     }
 
-    return response;
+    return { success: false, message: response.data?.message || "Login failed" };
   } catch (error: any) {
     console.error('Error logging in:', error);
-    return error.response
+    return {
+      success: false,
+      message: error.response?.data?.message || 'An error occurred. Please try again.',
+    };
   }
 };
 
@@ -60,13 +78,25 @@ const logoutUser = (): void => {
 };
 
 // Register user
-const registerUser = async (user: User): Promise<ApiResponse<any>> => {
+
+const registerUser = async (user: User): Promise<{
+  success: boolean;
+  data?: any;
+  message?: string;
+}> => {
   try {
-    const response: AxiosResponse<any> = await axios.post(`${USER_API_URL}/register`, user);
-    return response;
+    const response: AxiosResponse<ApiResponse<any>> = await axios.post(`${USER_API_URL}/register`, user);
+    
+    if (response.status === 201) {
+      return { success: true, data: response.data, message: 'Registration successful!' };
+    }
+
+    return { success: false, data: null, message: 'Unexpected response from the server.' };
   } catch (error: any) {
     console.error('Error registering user:', error);
-    return error.response;
+
+    const message = error.response?.data?.message || 'An error occurred while registering.';
+    return { success: false, data: null, message };
   }
 };
 

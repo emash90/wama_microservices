@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { RealHouse, RealTenant, getHouseById } from '../../data/mockData';
+import { RealHouse, RealTenant } from '../../data/mockData';
 import { Users, ChevronDown, ChevronUp, Search, Plus } from 'lucide-react';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { Menu, MenuItem, IconButton } from '@mui/material';
@@ -301,3 +301,8 @@ const TenantsTable: React.FC<TenantsTableProps> = ({ tenants, setTenantsData, ho
 };
 
 export default TenantsTable;
+
+
+
+
+

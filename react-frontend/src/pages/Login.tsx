@@ -1,34 +1,40 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Building, Lock, User } from 'lucide-react';
 import { loginUser } from '@/services/authService';
+import { Link } from 'react-router-dom'; 
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    const userLogin = async () => {
-      try {
-        const user = { email, password };
-        const response = await loginUser(user);
-        console.log(response);
-      } catch (error) {
-        console.error(error);
+    setErrorMessage('');
+    setSuccessMessage('');
+  
+    try {
+      const user = { email, password };
+      const response = await loginUser(user);
+      
+      if (response.success && response.token && response.user) {
+        setSuccessMessage(`Welcome back, ${response.user.first_name}! Redirecting...`);
+        setTimeout(() => navigate('/dashboard'), 1500);
+      } else {
+        setErrorMessage(response.message || 'Login failed. Please check your credentials.');
       }
-    };
-    userLogin()
-    // Simulate login process
-    setTimeout(() => {
+    } catch (error) {
+      setErrorMessage('An unexpected error occurred. Please try again.');
+    } finally {
       setIsLoading(false);
-      navigate('/');
-    }, 1500);
+    }
   };
+  
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4 animate-fade-in">
@@ -45,6 +51,9 @@ const Login: React.FC = () => {
             <p className="text-center text-muted-foreground mb-8">
               Sign in to your rental management system
             </p>
+            
+            {errorMessage && <p className="text-red-500 text-center mb-4">{errorMessage}</p>}
+            {successMessage && <p className="text-green-500 text-center mb-4">{successMessage}</p>}
             
             <form onSubmit={handleSubmit}>
               <div className="space-y-4">
@@ -120,6 +129,14 @@ const Login: React.FC = () => {
                 </button>
               </div>
             </form>
+            <div className="text-center mt-4">
+              <p className="text-sm">
+                Don’t have an account?{' '}
+                <Link to="/register" className="text-primary hover:text-primary/90 font-medium">
+                  Register
+                </Link>
+              </p>
+            </div>
           </div>
         </div>
       </div>

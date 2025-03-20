@@ -2,8 +2,56 @@ const mongoose = require('mongoose');
 const House = require('../models/houseModel');
 const { connectRabbitMQ, getChannel } = require('../../utils/rabbitmq');
 
+
+const generateHousePipeline = () => {
+  return [
+    { $match: { house_number: { $ne: "" } } },
+
+    {
+      $lookup: {
+        from: "tenants",
+        localField: "tenantId",
+        foreignField: "_id",
+        as: "tenantDetails",
+      },
+    },
+
+    {
+      $unwind: {
+        path: "$tenantDetails",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+
+    {
+      $project: {
+        _id: 1,
+        house_number: 1,
+        house_location: 1,
+        house_type: 1,
+        house_price: 1,
+        occupied: 1,
+        tenantId: 1,
+        createdAt: 1,
+        tenant_first_name: "$tenantDetails.tenant_first_name",
+        tenant_last_name: "$tenantDetails.tenant_last_name",
+        tenant_email: "$tenantDetails.tenant_email",
+        tenant_phone: "$tenantDetails.tenant_phone",
+      },
+    },
+
+    // Sort by createdAt in descending order
+    { $sort: { createdAt: -1 } },
+  ];
+};
+
+// const getAllHouses = async () => {
+//   return await House.find({ house_number: { $ne: "" } }).sort({ createdAt: -1 }); 
+// };
+
 const getAllHouses = async () => {
-  return await House.find({ house_number: { $ne: "" } }).sort({ createdAt: -1 }); 
+  const pipeline = generateHousePipeline();
+  return await House.aggregate(pipeline);
 };
 
 const getHouseById = async (id) => {

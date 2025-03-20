@@ -1,13 +1,18 @@
 
 import React, { useState } from 'react';
-import { RealPayment as Payment, House, Tenant, getPaymentsByMonth, houses, tenants, getTenantById, getHouseById } from '../../data/mockData';
+import { RealPayment as Payment, RealHouse as House, RealTenant as Tenant, getPaymentsByMonth } from '../../data/mockData';
 import { FileText, Download, Printer, Calendar } from 'lucide-react';
 
 interface ReportsGeneratorProps {
   payments: Payment[];
+  houses: House[];
+  tenants: Tenant[];
 }
 
-const ReportsGenerator: React.FC<ReportsGeneratorProps> = ({ payments }) => {
+const ReportsGenerator: React.FC<ReportsGeneratorProps> = ({ payments, houses, tenants, }) => {
+  // console.log("houses", houses)
+  // console.log("tenants", tenants)
+  // console.log("payments", payments)
   const currentDate = new Date();
   const [selectedMonth, setSelectedMonth] = useState(currentDate.getMonth());
   const [selectedYear, setSelectedYear] = useState(currentDate.getFullYear());
@@ -29,6 +34,21 @@ const ReportsGenerator: React.FC<ReportsGeneratorProps> = ({ payments }) => {
   const pendingRevenue = filteredPayments
     .filter(payment => payment.status === 'pending')
     .reduce((sum, payment) => sum + payment.amount_paid, 0);
+
+    // Helper to get tenant name by ID
+  const getTenantById = (id: string | null) => {
+    console.log("id", id)
+    if (!id) return 'None';
+    const tenant = tenants.find(tenant => tenant._id === id);
+    return tenant ? tenant.tenant_first_name : 'Unknown';
+  };
+
+  // Helper to get house by ID
+  const getHouseById = (id: string | null) => {
+    if (!id) return null;
+    return houses.find(house => house._id === id);
+  };
+
   
   // Occupancy data
   const occupiedHouses = houses.filter(house => house.occupied === true).length;
@@ -277,7 +297,7 @@ const ReportsGenerator: React.FC<ReportsGeneratorProps> = ({ payments }) => {
                           {house.occupied ? 'Occupied' : 'Vacant'}
                         </span>
                       </td>
-                      <td className="py-3 px-4 text-sm">{getTenantById(house.house_number)}</td>
+                      <td className="py-3 px-4 text-sm">{house.tenantId ? house.tenant_first_name + ' ' + house.tenant_last_name : 'None'}</td>
                       <td className="py-3 px-4 text-sm">
                         <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                           house.house_type === 1 ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800'

@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { RealPayment as Payment, getTenantById, getHouseById, RealTenant as Tenant } from '../../data/mockData';
+import { RealPayment as Payment, RealTenant as Tenant } from '../../data/mockData';
 import { CreditCard, ChevronDown, ChevronUp, Search, Plus, Filter } from 'lucide-react';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { Menu, MenuItem, IconButton } from '@mui/material';
@@ -78,18 +78,18 @@ const PaymentsTable: React.FC<PaymentsTableProps> = ({ payments, setPaymentData,
       };
 
   const filteredPayments = payments.filter(payment => {
-    const tenantName = getTenantById(payment.tenant_id).toLowerCase();
-    const houseNumber = getHouseById(payment.house_id)?.house_number.toLowerCase() || '';
+    // const tenantName = getTenantById(payment.tenant_id).toLowerCase();
+    // const houseNumber = getHouseById(payment.house_id)?.house_number.toLowerCase() || '';
     
-    const matchesSearch = 
-      tenantName.includes(searchTerm.toLowerCase()) ||
-      houseNumber.includes(searchTerm.toLowerCase())
+    // const matchesSearch = 
+      // tenantName.includes(searchTerm.toLowerCase()) ||
+      // houseNumber.includes(searchTerm.toLowerCase())
       // payment.reference.toLowerCase().includes(searchTerm.toLowerCase());
       
     const matchesStatus = filterStatus === 'All' ? true : payment.status === filterStatus;
     const matchesMethod = filterMethod === 'All' ? true : payment.payment_mode === filterMethod;
     
-    return matchesSearch && matchesStatus && matchesMethod;
+    return  matchesStatus && matchesMethod;
   });
 
   const sortedPayments = [...filteredPayments].sort((a, b) => {
@@ -215,7 +215,7 @@ const PaymentsTable: React.FC<PaymentsTableProps> = ({ payments, setPaymentData,
           </thead>
           <tbody>
             {sortedPayments.map((payment) => {
-              const house = getHouseById(payment.house_id);
+             
               return (
                 <tr 
                   key={payment._id} 
